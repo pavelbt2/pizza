@@ -2,15 +2,17 @@ package com.pizza.dao;
 
 import java.util.List;
 
+import com.pizza.general.UserAlreadyExistsError;
 import com.pizza.model.HUser;
 
 public interface UserDao {
 	
-    void saveUser(HUser user);
+    List<HUser> findAllUsers();
+    
+    void saveUser(HUser user) throws UserAlreadyExistsError;
     
 //    void updateUser(HUser user);
 //    
-    List<HUser> findAllUsers();
      
 //    void deleteUserById(String userId);
 //     

@@ -6,13 +6,13 @@
     <style>
     	
     
-      .username.ng-valid {
+      .firstName.ng-valid {
           background-color: lightgreen;
       }
-      .username.ng-dirty.ng-invalid-required {
+      .firstName.ng-dirty.ng-invalid-required {
           background-color: red;
       }
-      .username.ng-dirty.ng-invalid-minlength {
+      .firstName.ng-dirty.ng-invalid-minlength {
           background-color: yellow;
       }
  
@@ -39,28 +39,32 @@
                       <input type="hidden" ng-model="ctrl.user.id" />
                       <div class="row">
                           <div class="form-group col-md-12">
-                              <label class="col-md-2 control-lable" for="uname">Name</label>
+                              <label class="col-md-2 control-lable" for="uFirstName">First Name</label>
                               <div class="col-md-7">
-                                  <input type="text" ng-model="ctrl.user.username" id="uname" class="username form-control input-sm" placeholder="Enter your name" required ng-minlength="3"/>
+                                  <input type="text" ng-model="ctrl.user.firstName" id="uFirstName" class="firstName form-control input-sm" placeholder="Enter your first name" required ng-minlength="2"/>
                                   <div class="has-error" ng-show="myForm.$dirty">
-                                      <span ng-show="myForm.uname.$error.required">This is a required field</span>
-                                      <span ng-show="myForm.uname.$error.minlength">Minimum length required is 3</span>
-                                      <span ng-show="myForm.uname.$invalid">This field is invalid </span>
+                                      <span ng-show="myForm.uFirstName.$error.required">This is a required field</span>
+                                      <span ng-show="myForm.uFirstName.$error.minlength">Minimum length required is 2</span>
+                                      <span ng-show="myForm.uFirstName.$invalid">This field is invalid </span>
                                   </div>
                               </div>
                           </div>
                       </div>
-                         
-                       
+                                            
                       <div class="row">
                           <div class="form-group col-md-12">
-                              <label class="col-md-2 control-lable" for="address">Address</label>
+                              <label class="col-md-2 control-lable" for="uLastMame">Last Name</label>
                               <div class="col-md-7">
-                                  <input type="text" ng-model="ctrl.user.address" id="address" class="form-control input-sm" placeholder="Enter your Address. [This field is validation free]"/>
+                                  <input type="text" ng-model="ctrl.user.lastName" id="uLastMame" class="lastName form-control input-sm" placeholder="Enter your last name" required ng-minlength="2"/>
+                                  <div class="has-error" ng-show="myForm.$dirty">
+                                      <span ng-show="myForm.uLastMame.$error.required">This is a required field</span>
+                                      <span ng-show="myForm.uLastMame.$error.minlength">Minimum length required is 2</span>
+                                      <span ng-show="myForm.uLastMame.$invalid">This field is invalid </span>
+                                  </div>
                               </div>
                           </div>
-                      </div>
- 
+                      </div>                      
+
                       <div class="row">
                           <div class="form-group col-md-12">
                               <label class="col-md-2 control-lable" for="email">Email</label>
@@ -102,7 +106,8 @@
                               <td><span ng-bind="u.lastName"></span></td>
                               <td><span ng-bind="u.email"></span></td>
                               <td>
-                              <button type="button" ng-click="ctrl.edit(u.id)" class="btn btn-success custom-width">Edit</button>  <button type="button" ng-click="ctrl.remove(u.id)" class="btn btn-danger custom-width">Remove</button>
+                              	<button type="button" ng-click="ctrl.edit(u.id)" class="btn btn-success custom-width">Edit</button>  
+                              	<button type="button" ng-click="ctrl.remove(u.id)" class="btn btn-danger custom-width">Remove</button>
                               </td>
                           </tr>
                       </tbody>

@@ -1,25 +1,28 @@
 package com.pizza.controller;
 
 import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.pizza.general.UserAlreadyExistsError;
 import com.pizza.model.HUser;
 import com.pizza.service.UserService;
  
   
 @RestController
 // maps incoming requests to methods and responses in json format
-public class AngularController {
+public class AngularRestController {
+	
+	static Logger log = Logger.getLogger(AngularRestController.class.getName());
   
     @Autowired
     UserService userService;
@@ -27,8 +30,9 @@ public class AngularController {
      
     //-------------------Retrieve All Users--------------------------------------------------------
       
-    @RequestMapping(value = "/user/", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/fetchall", method = RequestMethod.GET)
     public ResponseEntity<List<HUser>> listAllUsers() {
+    	log.info("listAllUsers()");
         List<HUser> users = userService.findAllUsers();
         if(users.isEmpty()){
             return new ResponseEntity<List<HUser>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
@@ -53,23 +57,27 @@ public class AngularController {
 //  
 //      
 //      
-//    //-------------------Create a User--------------------------------------------------------
-//      
-//    @RequestMapping(value = "/user/", method = RequestMethod.POST)
-//    public ResponseEntity<Void> createUser(@RequestBody User user,    UriComponentsBuilder ucBuilder) {
-//        System.out.println("Creating User " + user.getUsername());
-//  
-//        if (userService.isUserExist(user)) {
-//            System.out.println("A User with name " + user.getUsername() + " already exist");
-//            return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-//        }
-//  
-//        userService.saveUser(user);
-//  
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setLocation(ucBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri());
-//        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
-//    }
+    //-------------------Create a User--------------------------------------------------------
+      
+    @RequestMapping(value = "/user/create", method = RequestMethod.POST)
+    public ResponseEntity<Void> createUser(@RequestBody HUser user,    UriComponentsBuilder ucBuilder) {
+    	log.info("Creating User:" + user.getFirstName() + " "+ user.getLastName());
+  
+        try {
+        	userService.addUser(user);
+        	
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(ucBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri()); // TODO ??? why error on console??
+            return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+        } catch (UserAlreadyExistsError eExists) {
+        	log.info("User already exists:" + user.getFirstName() + " "+ user.getLastName());
+            return new ResponseEntity<Void>(HttpStatus.CONFLICT);        	
+        } catch (Exception e) {
+        	log.info("Unexpected error creating user:" + user.getFirstName() + " "+ user.getLastName());
+            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);        	
+        }
+                
+    }
 //  
 //     
 //      

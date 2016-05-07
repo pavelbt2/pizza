@@ -51,7 +51,7 @@ App.controller('UserController', ['$scope', 'UserService', function($scope, User
  
           self.submit = function() {
               if(self.user.id===null){
-                  console.log('Saving New User', self.user);    
+                  console.log('Saving New User = ', self.user);    
                   self.createUser(self.user);
               }else{
                   self.updateUser(self.user, self.user.id);
@@ -61,7 +61,7 @@ App.controller('UserController', ['$scope', 'UserService', function($scope, User
           };
                
           self.edit = function(id){
-              console.log('id to be edited', id);
+              console.log('id to be edited = ', id);
               for(var i = 0; i < self.users.length; i++){
                   if(self.users[i].id === id) {
                      self.user = angular.copy(self.users[i]);

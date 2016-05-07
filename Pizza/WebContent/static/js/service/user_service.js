@@ -5,7 +5,7 @@ App.factory('UserService', ['$http', '$q', function($http, $q){
     return {
          
             fetchAllUsers: function() {
-                    return $http.get('http://localhost:8080/Pizza/user/')
+                    return $http.get('http://localhost:8080/Pizza/user/fetchall')
                             .then(
                                     function(response){
                                         return response.data;
@@ -18,7 +18,7 @@ App.factory('UserService', ['$http', '$q', function($http, $q){
             },
              
             createUser: function(user){
-                    return $http.post('http://localhost:8080/Pizza/user/', user)
+                    return $http.post('http://localhost:8080/Pizza/user/create', user)
                             .then(
                                     function(response){
                                         return response.data;

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pizza.dao.OrderDao;
+import com.pizza.general.OrderDoesntExistError;
 import com.pizza.general.PizzaError;
 import com.pizza.model.HOrder;
 
@@ -22,6 +23,11 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<HOrder> findAllOrders() {
 		return orderDao.findAllOrders();
+	}
+
+	@Override
+	public void updateOrder(HOrder order) throws OrderDoesntExistError {
+		orderDao.updateOrder(order);
 	}
 
 }

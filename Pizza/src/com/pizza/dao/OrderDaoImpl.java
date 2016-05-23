@@ -3,11 +3,14 @@ package com.pizza.dao;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.pizza.general.OrderDoesntExistError;
 import com.pizza.general.UserAlreadyExistsError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HUser;
@@ -21,6 +24,27 @@ public class OrderDaoImpl extends AbstractDao implements OrderDao {
 	public List<HOrder> findAllOrders() {
 		Criteria criteria = getSession().createCriteria(HOrder.class);
 		return (List<HOrder>) criteria.list();	
+	}
+
+	private HOrder findById(int orderId) {
+        Criteria criteria = getSession().createCriteria(HOrder.class);
+        criteria.add(Restrictions.eq("id",orderId));
+        return (HOrder) criteria.uniqueResult();
+	}	
+	
+	@Override
+	public void updateOrder(HOrder order) throws OrderDoesntExistError {
+		HOrder existingOrder = findById(order.getId());		
+		if (order == null ) {
+			throw new OrderDoesntExistError(order.getId());
+		}
+		
+		// TODO move this logic to service?
+		existingOrder.setDate(order.getDate());
+		existingOrder.setResponsible(order.getResponsible());
+		
+		getSession().update(existingOrder);
+		// TODO catch exception anyway - if was already deleted somehow
 	}
 
 

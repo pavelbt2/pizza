@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import com.pizza.general.OrderDoesntExistError;
 import com.pizza.general.UserAlreadyExistsError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HUser;
@@ -42,7 +43,27 @@ public class AngularRestController {
         List<HOrder> orders = orderService.findAllOrders();
 
         return new ResponseEntity<List<HOrder>>(orders, HttpStatus.OK);
-    }    
+    }   
+    
+    @RequestMapping(value = "/order/update/{id}", method = RequestMethod.POST)
+    public ResponseEntity<HOrder> updateOrder(@RequestBody HOrder order, UriComponentsBuilder ucBuilder) {
+    	log.info("Updating order:" + order.toString());
+  
+        try {
+        	orderService.updateOrder(order);
+        	
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(ucBuilder.path("/order/{id}").buildAndExpand(order.getId()).toUri()); // TODO ??? why error on console??
+            return new ResponseEntity<HOrder>(headers, HttpStatus.OK);
+        } catch (OrderDoesntExistError eExists) {
+        	log.info("Order with id " + order.getId() + " not found");
+        	return new ResponseEntity<HOrder>(HttpStatus.NOT_FOUND);      	
+        } catch (Exception e) {
+        	log.error("Unexpected error updating order:" + order.getId());
+            return new ResponseEntity<HOrder>(HttpStatus.INTERNAL_SERVER_ERROR);        	
+        }
+                
+    }
      
     //-------------------Retrieve All Users--------------------------------------------------------
       
@@ -54,8 +75,8 @@ public class AngularRestController {
             return new ResponseEntity<List<HUser>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
         }
         return new ResponseEntity<List<HUser>>(users, HttpStatus.OK);
-    }
-  
+    }    
+    
 //  
 //     
 //    //-------------------Retrieve Single User--------------------------------------------------------

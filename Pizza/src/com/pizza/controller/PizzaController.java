@@ -20,11 +20,15 @@ public class PizzaController {
 	
 	static Logger log = Logger.getLogger(PizzaController.class.getName());
 	
+//	@RequestMapping("/")
+//	public ModelAndView index() {
+//		return new ModelAndView("WEB-INF/jsp/UserManagement.jsp", "res", null);
+//	}
+
 	@RequestMapping("/")
 	public ModelAndView index() {
-		return new ModelAndView("WEB-INF/jsp/UserManagement.jsp", "res", null);
+		return new ModelAndView("node/index.html", "res", null);
 	}
-
 
 }
 

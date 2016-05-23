@@ -12,12 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.pizza.general.UserAlreadyExistsError;
+import com.pizza.model.HOrder;
 import com.pizza.model.HUser;
+import com.pizza.service.OrderService;
 import com.pizza.service.UserService;
  
-  
+
+@CrossOrigin // TODO OK???  
 @RestController
 // maps incoming requests to methods and responses in json format
 public class AngularRestController {
@@ -26,7 +30,19 @@ public class AngularRestController {
   
     @Autowired
     UserService userService;
-  
+    
+    @Autowired
+    OrderService orderService;
+
+
+    //------------------- Orders --------------------------------------------------------
+    @RequestMapping(value = "/order/fetchall", method = RequestMethod.GET)
+    public ResponseEntity<List<HOrder>> listAllOrders() {
+    	log.info("listAllOrders()");
+        List<HOrder> orders = orderService.findAllOrders();
+
+        return new ResponseEntity<List<HOrder>>(orders, HttpStatus.OK);
+    }    
      
     //-------------------Retrieve All Users--------------------------------------------------------
       

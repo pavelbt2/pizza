@@ -11,5 +11,7 @@ public interface OrderDao {
     List<HOrder> findAllOrders();
 
 	void updateOrder(HOrder order) throws OrderDoesntExistError ;
+
+	void createOrder(HOrder order);
        
 }

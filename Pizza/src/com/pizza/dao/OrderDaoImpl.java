@@ -35,7 +35,7 @@ public class OrderDaoImpl extends AbstractDao implements OrderDao {
 	@Override
 	public void updateOrder(HOrder order) throws OrderDoesntExistError {
 		HOrder existingOrder = findById(order.getId());		
-		if (order == null ) {
+		if (existingOrder == null ) {
 			throw new OrderDoesntExistError(order.getId());
 		}
 		
@@ -45,6 +45,11 @@ public class OrderDaoImpl extends AbstractDao implements OrderDao {
 		
 		getSession().update(existingOrder);
 		// TODO catch exception anyway - if was already deleted somehow
+	}
+
+	@Override
+	public void createOrder(HOrder order) {
+		getSession().save(order);		
 	}
 
 

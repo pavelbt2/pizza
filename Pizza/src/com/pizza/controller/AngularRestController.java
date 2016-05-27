@@ -59,12 +59,29 @@ public class AngularRestController {
         	log.info("Order with id " + order.getId() + " not found");
         	return new ResponseEntity<HOrder>(HttpStatus.NOT_FOUND);      	
         } catch (Exception e) {
-        	log.error("Unexpected error updating order:" + order.getId());
+        	log.error("Unexpected error updating order:" + order.toString());
             return new ResponseEntity<HOrder>(HttpStatus.INTERNAL_SERVER_ERROR);        	
         }
                 
     }
-     
+
+    @RequestMapping(value = "/order/create", method = RequestMethod.POST)
+    public ResponseEntity<HOrder> createOrder(@RequestBody HOrder order, UriComponentsBuilder ucBuilder) {
+    	log.info("Creating Order:"+order.toString());
+  
+        try {
+        	orderService.createOrder(order);
+        	
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(ucBuilder.path("/order/{id}").buildAndExpand(order.getId()).toUri()); // TODO ??? why error on console??
+            return new ResponseEntity<HOrder>(order, headers, HttpStatus.OK);     	
+        } catch (Exception e) {
+        	log.info("Unexpected error creating order:" + order.toString());
+            return new ResponseEntity<HOrder>(HttpStatus.INTERNAL_SERVER_ERROR);        	
+        }
+                
+    }    
+    
     //-------------------Retrieve All Users--------------------------------------------------------
       
     @RequestMapping(value = "/user/fetchall", method = RequestMethod.GET)

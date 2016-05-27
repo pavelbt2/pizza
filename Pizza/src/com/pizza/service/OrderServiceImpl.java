@@ -1,5 +1,7 @@
 package com.pizza.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -28,6 +30,13 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public void updateOrder(HOrder order) throws OrderDoesntExistError {
 		orderDao.updateOrder(order);
+	}
+
+	@Override
+	public void createOrder(HOrder order) {
+		LocalDate currentDate = LocalDate.now();
+		order.setDate(currentDate.toString());
+		orderDao.createOrder(order);		
 	}
 
 }

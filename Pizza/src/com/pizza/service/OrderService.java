@@ -9,6 +9,8 @@ public interface OrderService {
 
 	List<HOrder> findAllOrders();
 
-	void updateOrder(HOrder order) throws OrderDoesntExistError;	
+	void updateOrder(HOrder order) throws OrderDoesntExistError;
+
+	void createOrder(HOrder order);	
 	
 }

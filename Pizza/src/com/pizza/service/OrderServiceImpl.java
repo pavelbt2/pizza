@@ -34,9 +34,28 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public void createOrder(HOrder order) {
-		LocalDate currentDate = LocalDate.now();
-		order.setDate(currentDate.toString());
+		order.setDate(getCurrentDate());
 		orderDao.createOrder(order);		
 	}
+	
+	private String getCurrentDate() {
+		LocalDate currentDate = LocalDate.now();
+		return currentDate.toString();
+	}
+
+	@Override
+	public HOrder findOrder(long orderId) {
+		return orderDao.findById(orderId);	
+	}
+
+	@Override
+	public HOrder findCurrentOrder() {
+		HOrder order =  orderDao.findByDate(getCurrentDate());
+		if (order == null) {
+			order = new HOrder();
+			order.setDate(getCurrentDate());
+		}
+		return order;
+	}	
 
 }

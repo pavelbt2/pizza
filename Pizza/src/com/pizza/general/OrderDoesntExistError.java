@@ -4,9 +4,9 @@ public class OrderDoesntExistError extends PizzaError {
 	
 	private static final long serialVersionUID = -3668011625570724170L;
 	
-	private final int orderId;
+	private final long orderId;
 	
-	public OrderDoesntExistError(int orderId) {
+	public OrderDoesntExistError(long orderId) {
 		this.orderId = orderId;
 	}
 	

@@ -7,10 +7,15 @@ import com.pizza.model.HOrder;
 
 public interface OrderService {
 
-	List<HOrder> findAllOrders();
+	public List<HOrder> findAllOrders();
 
-	void updateOrder(HOrder order) throws OrderDoesntExistError;
+	public void updateOrder(HOrder order) throws OrderDoesntExistError;
 
-	void createOrder(HOrder order);	
+	public void createOrder(HOrder order);
+
+	public HOrder findOrder(long orderId);
+	
+	// returns order with no id if no order placed this day yet
+	public HOrder findCurrentOrder();	
 	
 }

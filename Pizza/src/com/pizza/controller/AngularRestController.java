@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.pizza.general.OrderDoesntExistError;
 import com.pizza.general.UserAlreadyExistsError;
@@ -44,6 +45,30 @@ public class AngularRestController {
 
         return new ResponseEntity<List<HOrder>>(orders, HttpStatus.OK);
     }   
+    
+    @RequestMapping(value = "/order/get/{id}", method = RequestMethod.GET)
+    public ResponseEntity<HOrder> getOrder(@PathVariable("id") long orderId) {
+    	return getOrder(orderId);
+    }
+    
+    @RequestMapping(value = "/order/get", method = RequestMethod.GET)
+    public ResponseEntity<HOrder> getOrder() {
+    	return getOrder(null);
+    }
+    
+    private ResponseEntity<HOrder> getOrder(Long orderId) {
+    	log.info("getOrder() id="+orderId);
+    	
+    	HOrder order = null;
+    	
+    	if (orderId == null) {
+    		order = orderService.findCurrentOrder();
+    	} else {
+    		order = orderService.findOrder(orderId);
+    	}
+        
+        return new ResponseEntity<HOrder>(order, HttpStatus.OK);    	
+    }
     
     @RequestMapping(value = "/order/update/{id}", method = RequestMethod.POST)
     public ResponseEntity<HOrder> updateOrder(@RequestBody HOrder order, UriComponentsBuilder ucBuilder) {

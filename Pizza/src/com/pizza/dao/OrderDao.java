@@ -8,10 +8,14 @@ import com.pizza.model.HOrder;
 
 public interface OrderDao {
 	
-    List<HOrder> findAllOrders();
+	public List<HOrder> findAllOrders();
 
-	void updateOrder(HOrder order) throws OrderDoesntExistError ;
+    public void updateOrder(HOrder order) throws OrderDoesntExistError ;
 
-	void createOrder(HOrder order);
+	public void createOrder(HOrder order);
+	
+	public HOrder findById(long orderId);
+
+	public HOrder findByDate(String currentDate);
        
 }

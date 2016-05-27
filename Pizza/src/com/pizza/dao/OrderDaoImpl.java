@@ -26,11 +26,20 @@ public class OrderDaoImpl extends AbstractDao implements OrderDao {
 		return (List<HOrder>) criteria.list();	
 	}
 
-	private HOrder findById(int orderId) {
+	@Override
+	public HOrder findById(long orderId) {
         Criteria criteria = getSession().createCriteria(HOrder.class);
         criteria.add(Restrictions.eq("id",orderId));
         return (HOrder) criteria.uniqueResult();
 	}	
+	
+	@Override
+	public HOrder findByDate(String currentDate) {
+        Criteria criteria = getSession().createCriteria(HOrder.class);
+        criteria.add(Restrictions.eq("date",currentDate));
+        return (HOrder) criteria.uniqueResult();
+	}
+
 	
 	@Override
 	public void updateOrder(HOrder order) throws OrderDoesntExistError {

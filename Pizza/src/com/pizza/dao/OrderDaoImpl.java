@@ -30,7 +30,8 @@ public class OrderDaoImpl extends AbstractDao implements OrderDao {
 	public HOrder findById(long orderId) {
         Criteria criteria = getSession().createCriteria(HOrder.class);
         criteria.add(Restrictions.eq("id",orderId));
-        return (HOrder) criteria.uniqueResult();
+        HOrder order = (HOrder) criteria.uniqueResult();              
+        return order;
 	}	
 	
 	@Override

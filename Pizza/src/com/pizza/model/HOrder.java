@@ -1,10 +1,15 @@
 package com.pizza.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -19,7 +24,11 @@ public class HOrder {
 	private String date;
 
 	@Column(name = "RESPONSIBLE", nullable = false)
-	private String responsible;	
+	private String responsible;
+	
+	@OneToMany(targetEntity = HOrderedItem.class, fetch= FetchType.EAGER) // TODO refactor to be lazy - not that easy..
+	@JoinColumn(name = "ORDER_ID")
+	private List<HOrderedItem> items;
 
 	@Override
 	public String toString() {
@@ -53,6 +62,16 @@ public class HOrder {
 
 	public void setResponsible(String responsible) {
 		this.responsible = responsible;
+	}
+
+
+	public List<HOrderedItem> getItems() {
+		return items;
+	}
+
+
+	public void setItems(List<HOrderedItem> items) {
+		this.items = items;
 	}
 
 }

@@ -48,15 +48,16 @@ public class AngularRestController {
     
     @RequestMapping(value = "/order/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<HOrder> getOrder(@PathVariable("id") long orderId) {
-    	return getOrder(orderId);
+    	return getOrderInner
+    	(orderId);
     }
     
     @RequestMapping(value = "/order/get", method = RequestMethod.GET)
     public ResponseEntity<HOrder> getOrder() {
-    	return getOrder(null);
+    	return getOrderInner(null);
     }
     
-    private ResponseEntity<HOrder> getOrder(Long orderId) {
+    private ResponseEntity<HOrder> getOrderInner(Long orderId) {
     	log.info("getOrder() id="+orderId);
     	
     	HOrder order = null;

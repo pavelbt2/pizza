@@ -19,6 +19,7 @@ import com.pizza.general.OrderDoesntExistError;
 import com.pizza.general.UserAlreadyExistsError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HUser;
+import com.pizza.model.Item;
 import com.pizza.service.OrderService;
 import com.pizza.service.UserService;
  
@@ -107,6 +108,17 @@ public class AngularRestController {
         }
                 
     }    
+    
+    
+    //------------------- Items --------------------------------------------------------
+     
+    @RequestMapping(value = "/item/fetchall", method = RequestMethod.GET)
+    public ResponseEntity<List<Item>> listAllItems() {
+    	log.info("listAllItems()");
+        List<Item> orders = Item.getAllItemsAsList();
+
+        return new ResponseEntity<List<Item>>(orders, HttpStatus.OK);
+    }   
     
     //-------------------Retrieve All Users--------------------------------------------------------
       

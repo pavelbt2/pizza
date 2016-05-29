@@ -8,20 +8,26 @@ import com.pizza.controller.ItemJacksonSerializer;
 
 @JsonSerialize(using = ItemJacksonSerializer.class)
 public enum Item {
-	PIZZA_SLICE("Pizza Slice"),
-	GREEK_SALAD("Greek Salad"),
-	KALZONE("Kalzone");
+	PIZZA_SLICE("Pizza Slice", 12.5),
+	GREEK_SALAD("Greek Salad", 27.0),
+	KALZONE("Kalzone", 25.0);
 	
 	private final String pretty;
+	private final double price;
 	
-	private Item (String pretty) {
+	private Item (String pretty, double price) {
 		this.pretty = pretty;
+		this.price = price;
 	}
 	
 	public String getPretty() {
 		return pretty;
 	}
 	
+	public double getPrice() {
+		return price;
+	}
+
 	public static List<Item> getAllItemsAsList() {
 		return Arrays.asList(Item.values());
 	}	

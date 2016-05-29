@@ -16,10 +16,10 @@ public class ItemJacksonSerializer extends JsonSerializer<Item> {
 			throws IOException, JsonProcessingException {
 		
 	    generator.writeStartObject();
-//	    generator.writeFieldName("enum");
-//	    generator.writeNumber(item.toString());
 	    generator.writeFieldName("pretty");
 	    generator.writeString(item.getPretty());
+	    generator.writeFieldName("price");
+	    generator.writeNumber(item.getPrice());	    
 	    generator.writeEndObject();
 	}
 

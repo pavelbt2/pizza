@@ -16,6 +16,8 @@ public class ItemJacksonSerializer extends JsonSerializer<Item> {
 			throws IOException, JsonProcessingException {
 		
 	    generator.writeStartObject();
+	    generator.writeFieldName("id");
+	    generator.writeString(item.toString());	    
 	    generator.writeFieldName("pretty");
 	    generator.writeString(item.getPretty());
 	    generator.writeFieldName("price");

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.pizza.general.OrderDoesntExistError;
 import com.pizza.general.UserAlreadyExistsError;
 import com.pizza.model.HOrder;
+import com.pizza.model.HOrderedItem;
 import com.pizza.model.HUser;
 import com.pizza.model.Item;
 import com.pizza.service.OrderService;
@@ -107,8 +108,27 @@ public class AngularRestController {
             return new ResponseEntity<HOrder>(HttpStatus.INTERNAL_SERVER_ERROR);        	
         }
                 
-    }    
+    }
     
+    
+    //order/additem/447 
+    @RequestMapping(value = "/order/additem/{orderId}", method = RequestMethod.POST)
+    public ResponseEntity<HOrder> addItemToOrder(@PathVariable("orderId") long orderId, @RequestBody HOrderedItem orderedItem, UriComponentsBuilder ucBuilder) {
+    	log.info("Adding item :"+orderedItem.toString() + " to order: "+orderId);
+  
+        try {
+//        	orderService.createOrder(order);
+        	HOrder order = new HOrder();
+        	
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(ucBuilder.path("/order/{id}").buildAndExpand(order.getId()).toUri()); // TODO ??? why error on console??
+            return new ResponseEntity<HOrder>(order, headers, HttpStatus.OK);     	
+        } catch (Exception e) {
+//TODO        	log.info("Unexpected error creating order:" + order.toString());
+            return new ResponseEntity<HOrder>(HttpStatus.INTERNAL_SERVER_ERROR);        	
+        }
+                
+    }
     
     //------------------- Items --------------------------------------------------------
      

@@ -18,7 +18,7 @@ public class HOrderedItem {
 	private long id;
 
 	@Column(name = "ORDER_ID", nullable = false)
-	private long order_id;
+	private long orderId;
 
 	@Column(name = "ITEM", nullable = false)
 	@Enumerated(EnumType.STRING)
@@ -38,12 +38,12 @@ public class HOrderedItem {
 		this.id = id;
 	}
 
-	public long getOrder_id() {
-		return order_id;
+	public long getOrderId() {
+		return orderId;
 	}
 
-	public void setOrder_id(long order_id) {
-		this.order_id = order_id;
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
 	}
 
 	public Item getItem() {

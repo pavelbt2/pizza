@@ -10,7 +10,9 @@ import com.pizza.controller.ItemJacksonSerializer;
 public enum Item {
 	PIZZA_SLICE("Pizza Slice", 12.5),
 	GREEK_SALAD("Greek Salad", 27.0),
-	KALZONE("Kalzone", 25.0);
+	HOME_SALAD("סלט הבית", 25.0),
+	KALZONE("Kalzone", 25.0),
+	;
 	
 	private final String pretty;
 	private final double price;

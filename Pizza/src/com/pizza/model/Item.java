@@ -6,8 +6,6 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.pizza.controller.ItemJacksonSerializer;
-import com.pizza.controller.ItemJacksonDeSerializer;
 
 
 @JsonSerialize(using = ItemJacksonSerializer.class)

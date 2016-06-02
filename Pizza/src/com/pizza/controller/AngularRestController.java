@@ -50,8 +50,7 @@ public class AngularRestController {
     
     @RequestMapping(value = "/order/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<HOrder> getOrder(@PathVariable("id") long orderId) {
-    	return getOrderInner
-    	(orderId);
+    	return getOrderInner(orderId);
     }
     
     @RequestMapping(value = "/order/get", method = RequestMethod.GET)
@@ -65,7 +64,7 @@ public class AngularRestController {
     	HOrder order = null;
     	
     	if (orderId == null) {
-    		order = orderService.findCurrentOrder();
+    		order = orderService.getCurrentOrder();
     	} else {
     		order = orderService.findOrder(orderId);
     	}
@@ -91,43 +90,17 @@ public class AngularRestController {
             return new ResponseEntity<HOrder>(HttpStatus.INTERNAL_SERVER_ERROR);        	
         }
                 
-    }
-
-    @RequestMapping(value = "/order/create", method = RequestMethod.POST)
-    public ResponseEntity<HOrder> createOrder(@RequestBody HOrder order, UriComponentsBuilder ucBuilder) {
-    	log.info("Creating Order:"+order.toString());
-  
-        try {
-        	orderService.createOrder(order);
-        	
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/order/{id}").buildAndExpand(order.getId()).toUri()); // TODO ??? why error on console??
-            return new ResponseEntity<HOrder>(order, headers, HttpStatus.OK);     	
-        } catch (Exception e) {
-        	log.info("Unexpected error creating order:" + order.toString());
-            return new ResponseEntity<HOrder>(HttpStatus.INTERNAL_SERVER_ERROR);        	
-        }
-                
-    }
+    }    
     
-    
-    //order/additem/447 
     @RequestMapping(value = "/order/additem/{orderId}", method = RequestMethod.POST)
-    public ResponseEntity<HOrder> addItemToOrder(@PathVariable("orderId") long orderId, @RequestBody HOrderedItem orderedItem, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<Void> addItemToOrder(@PathVariable("orderId") long orderId, @RequestBody HOrderedItem orderedItem, UriComponentsBuilder ucBuilder) {
     	log.info("Adding item :"+orderedItem.toString() + " to order: "+orderId);
-  
-        try {
-//        	orderService.createOrder(order);
-        	HOrder order = new HOrder();
+
+    	orderService.addItemToOrder(orderedItem);
         	
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/order/{id}").buildAndExpand(order.getId()).toUri()); // TODO ??? why error on console??
-            return new ResponseEntity<HOrder>(order, headers, HttpStatus.OK);     	
-        } catch (Exception e) {
-//TODO        	log.info("Unexpected error creating order:" + order.toString());
-            return new ResponseEntity<HOrder>(HttpStatus.INTERNAL_SERVER_ERROR);        	
-        }
-                
+    	HttpHeaders headers = new HttpHeaders();
+// 	headers.setLocation(ucBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri()); // TODO ??? why error on console??
+    	return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
     
     //------------------- Items --------------------------------------------------------

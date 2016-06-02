@@ -35,7 +35,6 @@ public class HOrder {
 		return "Order [id=" + id + ", date=" + date + ", responsible=" + responsible;
 	}
 
-
 	public long getId() {
 		return id;
 	}

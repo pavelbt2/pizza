@@ -1,4 +1,4 @@
-package com.pizza.controller;
+package com.pizza.model;
 
 import java.io.IOException;
 
@@ -6,9 +6,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.pizza.model.Item;
 
-// TODO move to a different package
 public class ItemJacksonSerializer extends JsonSerializer<Item> {
 
 	@Override

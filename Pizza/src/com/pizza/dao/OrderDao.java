@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pizza.general.OrderDoesntExistError;
 import com.pizza.model.HOrder;
+import com.pizza.model.HOrderedItem;
 
 
 public interface OrderDao {
@@ -17,5 +18,7 @@ public interface OrderDao {
 	public HOrder findById(long orderId);
 
 	public HOrder findByDate(String currentDate);
+
+	public void saveOrderedItem(HOrderedItem orderedItem);
        
 }

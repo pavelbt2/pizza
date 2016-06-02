@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pizza.general.OrderDoesntExistError;
 import com.pizza.model.HOrder;
+import com.pizza.model.HOrderedItem;
 
 public interface OrderService {
 
@@ -11,11 +12,11 @@ public interface OrderService {
 
 	public void updateOrder(HOrder order) throws OrderDoesntExistError;
 
-	public void createOrder(HOrder order);
-
 	public HOrder findOrder(long orderId);
 	
-	// returns order with no id if no order placed this day yet
-	public HOrder findCurrentOrder();	
+	// creates new order for current date if none exist yet
+	public HOrder getCurrentOrder();
+
+	public void addItemToOrder(HOrderedItem orderedItem);	
 	
 }

@@ -1,7 +1,6 @@
 package com.pizza.service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -14,6 +13,7 @@ import com.pizza.dao.OrderDao;
 import com.pizza.general.OrderDoesntExistError;
 import com.pizza.general.PizzaError;
 import com.pizza.model.HOrder;
+import com.pizza.model.HOrderedItem;
 
 @Service("orderService")
 @Transactional(propagation=Propagation.REQUIRED, rollbackFor={PizzaError.class})
@@ -31,12 +31,6 @@ public class OrderServiceImpl implements OrderService {
 	public void updateOrder(HOrder order) throws OrderDoesntExistError {
 		orderDao.updateOrder(order);
 	}
-
-	@Override
-	public void createOrder(HOrder order) {
-		order.setDate(getCurrentDate());
-		orderDao.createOrder(order);		
-	}
 	
 	private String getCurrentDate() {
 		LocalDate currentDate = LocalDate.now();
@@ -49,13 +43,19 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public HOrder findCurrentOrder() {
+	public HOrder getCurrentOrder() {
 		HOrder order =  orderDao.findByDate(getCurrentDate());
 		if (order == null) {
 			order = new HOrder();
 			order.setDate(getCurrentDate());
+			orderDao.createOrder(order);
 		}
 		return order;
+	}
+
+	@Override
+	public void addItemToOrder(HOrderedItem orderedItem) {				
+		orderDao.saveOrderedItem(orderedItem);		
 	}	
 
 }

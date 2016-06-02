@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.pizza.general.OrderDoesntExistError;
 import com.pizza.general.UserAlreadyExistsError;
 import com.pizza.model.HOrder;
+import com.pizza.model.HOrderedItem;
 import com.pizza.model.HUser;
 
 @Repository("orderDao")
@@ -60,6 +61,11 @@ public class OrderDaoImpl extends AbstractDao implements OrderDao {
 	@Override
 	public void createOrder(HOrder order) {
 		getSession().save(order);		
+	}
+
+	@Override
+	public void saveOrderedItem(HOrderedItem orderedItem) {
+		getSession().save(orderedItem);
 	}
 
 

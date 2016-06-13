@@ -1,7 +1,9 @@
 package com.pizza.model;
 
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
 
 @Entity
 @Table(name="T_ORDER")
@@ -26,9 +29,8 @@ public class HOrder {
 	@Column(name = "RESPONSIBLE", nullable = false)
 	private String responsible;
 	
-	@OneToMany(targetEntity = HOrderedItem.class, fetch= FetchType.EAGER) // TODO refactor to be lazy - not that easy..
-	@JoinColumn(name = "ORDER_ID")
-	private List<HOrderedItem> items;
+	@OneToMany(fetch= FetchType.EAGER, mappedBy="order") // TODO refactor to be lazy - not that easy..
+	private Set<HOrderedItem> items;
 
 	@Override
 	public String toString() {
@@ -64,12 +66,12 @@ public class HOrder {
 	}
 
 
-	public List<HOrderedItem> getItems() {
+	public Set<HOrderedItem> getItems() {
 		return items;
 	}
 
 
-	public void setItems(List<HOrderedItem> items) {
+	public void setItems(Set<HOrderedItem> items) {
 		this.items = items;
 	}
 

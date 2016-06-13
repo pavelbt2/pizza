@@ -4,10 +4,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="T_ORDERED_ITEM")
@@ -16,9 +21,6 @@ public class HOrderedItem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-
-	@Column(name = "ORDER_ID", nullable = false)
-	private long orderId;
 
 	@Column(name = "ITEM", nullable = false)
 	@Enumerated(EnumType.STRING)
@@ -29,6 +31,11 @@ public class HOrderedItem {
 	
 	@Column(name = "USER", nullable = false)
 	private String user;
+	
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="ORDER_ID", nullable=false)
+    @JsonIgnore
+	private HOrder order;
 
 	public long getId() {
 		return id;
@@ -36,14 +43,6 @@ public class HOrderedItem {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public long getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(long orderId) {
-		this.orderId = orderId;
 	}
 
 	public Item getItem() {
@@ -68,6 +67,14 @@ public class HOrderedItem {
 
 	public void setUser(String user) {
 		this.user = user;
+	}
+
+	public HOrder getOrder() {
+		return order;
+	}
+
+	public void setOrder(HOrder order) {
+		this.order = order;
 	}
 	
 	

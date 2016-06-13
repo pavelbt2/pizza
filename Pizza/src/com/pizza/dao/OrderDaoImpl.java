@@ -23,8 +23,11 @@ public class OrderDaoImpl extends AbstractDao implements OrderDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<HOrder> findAllOrders() {
-		Criteria criteria = getSession().createCriteria(HOrder.class);
-		return (List<HOrder>) criteria.list();	
+		Criteria criteria = getSession().createCriteria(HOrder.class)
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+
+		List<HOrder> orders =  (List<HOrder>) criteria.list();
+		return orders;
 	}
 
 	@Override

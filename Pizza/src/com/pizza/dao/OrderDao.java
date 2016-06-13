@@ -1,5 +1,6 @@
 package com.pizza.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.pizza.general.OrderDoesntExistError;
@@ -17,7 +18,7 @@ public interface OrderDao {
 	
 	public HOrder findById(long orderId);
 
-	public HOrder findByDate(String currentDate);
+	public HOrder findByDate(Date currentDate);
 
 	public void saveOrderedItem(HOrderedItem orderedItem);
        

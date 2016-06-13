@@ -1,5 +1,6 @@
 package com.pizza.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -39,7 +40,7 @@ public class OrderDaoImpl extends AbstractDao implements OrderDao {
 	}	
 	
 	@Override
-	public HOrder findByDate(String currentDate) {
+	public HOrder findByDate(Date currentDate) {
         Criteria criteria = getSession().createCriteria(HOrder.class);
         criteria.add(Restrictions.eq("date",currentDate));
         return (HOrder) criteria.uniqueResult();

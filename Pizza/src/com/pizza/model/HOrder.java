@@ -1,18 +1,17 @@
 package com.pizza.model;
 
-import java.util.List;
+import java.util.Date;
 import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 
 @Entity
@@ -24,7 +23,8 @@ public class HOrder {
 	private long id;
 
 	@Column(name = "ORDER_DATE", nullable = false)
-	private String date;
+	@JsonFormat(pattern="yyyy-MM-dd")
+	private Date date;
 
 	@Column(name = "RESPONSIBLE", nullable = false)
 	private String responsible;
@@ -46,12 +46,12 @@ public class HOrder {
 	}
 
 
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

@@ -54,7 +54,9 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public void addItemToOrder(HOrderedItem orderedItem) {				
+	public void addItemToOrder(long orderId, HOrderedItem orderedItem) {
+		HOrder order = findOrder(orderId);
+		orderedItem.setOrder(order);
 		orderDao.saveOrderedItem(orderedItem);		
 	}	
 

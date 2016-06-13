@@ -96,7 +96,7 @@ public class AngularRestController {
     public ResponseEntity<Void> addItemToOrder(@PathVariable("orderId") long orderId, @RequestBody HOrderedItem orderedItem, UriComponentsBuilder ucBuilder) {
     	log.info("Adding item :"+orderedItem.toString() + " to order: "+orderId);
 
-    	orderService.addItemToOrder(orderedItem);
+    	orderService.addItemToOrder(orderId, orderedItem);
         	
     	HttpHeaders headers = new HttpHeaders();
 // 	headers.setLocation(ucBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri()); // TODO ??? why error on console??

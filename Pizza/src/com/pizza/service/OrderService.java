@@ -17,6 +17,6 @@ public interface OrderService {
 	// creates new order for current date if none exist yet
 	public HOrder getCurrentOrder();
 
-	public void addItemToOrder(HOrderedItem orderedItem);	
+	public void addItemToOrder(long orderId, HOrderedItem orderedItem);	
 	
 }

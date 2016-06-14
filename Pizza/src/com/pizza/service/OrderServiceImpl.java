@@ -49,10 +49,12 @@ public class OrderServiceImpl implements OrderService {
 	public HOrder getCurrentOrder() {
 		HOrder order =  orderDao.findByDate(getCurrentDate());
 		if (order == null) {
-			order = new HOrder();			
-			order.setDate(getCurrentDate());
-			order.setStatus(OrderStatus.OPEN);
-			orderDao.createOrder(order);
+			order = new HOrder();
+			order.setValid(false);
+				
+//			order.setDate(getCurrentDate());
+//			order.setStatus(OrderStatus.OPEN);
+//			orderDao.createOrder(order);
 		}
 		return order;
 	}

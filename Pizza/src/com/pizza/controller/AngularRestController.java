@@ -69,7 +69,7 @@ public class AngularRestController {
     		order = orderService.findOrder(orderId);
     	}
         
-        return new ResponseEntity<HOrder>(order, HttpStatus.OK);    	
+    	return new ResponseEntity<HOrder>(order, HttpStatus.OK);
     }
     
     @RequestMapping(value = "/order/update/{id}", method = RequestMethod.POST)

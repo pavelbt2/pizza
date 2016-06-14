@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -35,6 +36,9 @@ public class HOrder {
 	@Column(name = "RESPONSIBLE", nullable = false)
 	private String responsible;
 	
+	@Transient
+	private boolean isValid = true;
+	
 	@OneToMany(fetch= FetchType.EAGER, mappedBy="order") // TODO refactor to be lazy - not that easy..
 	private Set<HOrderedItem> items;
 
@@ -42,7 +46,7 @@ public class HOrder {
 	public String toString() {
 		return "Order [id=" + id + ", date=" + date + ", responsible=" + responsible;
 	}
-
+	
 	public long getId() {
 		return id;
 	}
@@ -87,6 +91,14 @@ public class HOrder {
 
 	public void setStatus(OrderStatus status) {
 		this.status = status;
+	}
+
+	public boolean isValid() {
+		return isValid;
+	}
+
+	public void setValid(boolean isValid) {
+		this.isValid = isValid;
 	}
 
 }

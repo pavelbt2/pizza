@@ -2,10 +2,11 @@ package com.pizza.model;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pizza.jackson.ItemJacksonDeSerializer;
+import com.pizza.jackson.ItemJacksonSerializer;
 
 
 @JsonSerialize(using = ItemJacksonSerializer.class)
@@ -40,11 +41,6 @@ public enum Item {
 	public static List<Item> getAllItemsAsList() {
 		return Arrays.asList(Item.values());
 	}
-
-	public static Item forName(String string) {
-		// TODO Auto-generated method stub
-		return null;		
-	}	
 	
 }
 

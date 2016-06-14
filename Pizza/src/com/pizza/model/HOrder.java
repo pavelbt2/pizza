@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,6 +27,10 @@ public class HOrder {
 	@Column(name = "ORDER_DATE", nullable = false)
 	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date date;
+	
+	@Column(name = "STATUS", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private OrderStatus status;
 
 	@Column(name = "RESPONSIBLE", nullable = false)
 	private String responsible;
@@ -73,6 +79,14 @@ public class HOrder {
 
 	public void setItems(Set<HOrderedItem> items) {
 		this.items = items;
+	}
+
+	public OrderStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(OrderStatus status) {
+		this.status = status;
 	}
 
 }

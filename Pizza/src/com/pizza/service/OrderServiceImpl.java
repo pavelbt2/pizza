@@ -16,6 +16,7 @@ import com.pizza.general.OrderDoesntExistError;
 import com.pizza.general.PizzaError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
+import com.pizza.model.OrderStatus;
 
 @Service("orderService")
 @Transactional(propagation=Propagation.REQUIRED, rollbackFor={PizzaError.class})
@@ -48,8 +49,9 @@ public class OrderServiceImpl implements OrderService {
 	public HOrder getCurrentOrder() {
 		HOrder order =  orderDao.findByDate(getCurrentDate());
 		if (order == null) {
-			order = new HOrder();
+			order = new HOrder();			
 			order.setDate(getCurrentDate());
+			order.setStatus(OrderStatus.OPEN);
 			orderDao.createOrder(order);
 		}
 		return order;

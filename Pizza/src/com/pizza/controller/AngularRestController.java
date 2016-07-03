@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,17 +20,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.pizza.configuration.JwtUtil;
 import com.pizza.general.OrderDoesntExistError;
-import com.pizza.general.UserAlreadyExistsError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
-import com.pizza.model.HUser;
 import com.pizza.model.Item;
 import com.pizza.service.OrderService;
-import com.pizza.service.UserService;
  
 
-@CrossOrigin // TODO OK???  
+@CrossOrigin // TODO OK?? - no!! at least limit to specific client origin. 
+// allowedHeaders=
 @RestController
 // maps incoming requests to methods and responses in json format
 public class AngularRestController {
@@ -33,14 +37,40 @@ public class AngularRestController {
 	static Logger log = Logger.getLogger(AngularRestController.class.getName());
   
     @Autowired
-    UserService userService;
+    private AuthenticationManager authenticationManager;
+    
+    @Autowired
+    private JwtUtil jwtUtil; // TODO replace by JwtAuthenticationProvider?
     
     @Autowired
     OrderService orderService;
+    
+    
 
+    
+    //------------------- Login --------------------------------------------------------
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ResponseEntity<?> login(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
+    	
+        // Perform the security
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        authenticationRequest.getUsername(),
+                        authenticationRequest.getPassword()
+                )
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication); // TODO needed??
+
+        // Reload password post-security so we can generate token
+        // TODO final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final String token = jwtUtil.generateToken(authenticationRequest.getUsername());
+
+        // Return the token
+        return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+    }    
 
     //------------------- Orders --------------------------------------------------------
-    @RequestMapping(value = "/order/fetchall", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/order/fetchall", method = RequestMethod.GET)
     public ResponseEntity<List<HOrder>> listAllOrders() {
     	log.info("listAllOrders()");
         List<HOrder> orders = orderService.findAllOrders();
@@ -48,12 +78,12 @@ public class AngularRestController {
         return new ResponseEntity<List<HOrder>>(orders, HttpStatus.OK);
     }   
     
-    @RequestMapping(value = "/order/get/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/order/get/{id}", method = RequestMethod.GET)
     public ResponseEntity<HOrder> getOrder(@PathVariable("id") long orderId) {
     	return getOrderInner(orderId);
     }
     
-    @RequestMapping(value = "/order/get", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/order/get", method = RequestMethod.GET)
     public ResponseEntity<HOrder> getOrder() {
     	return getOrderInner(null);
     }
@@ -72,7 +102,7 @@ public class AngularRestController {
     	return new ResponseEntity<HOrder>(order, HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/order/update/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/order/update/{id}", method = RequestMethod.POST)
     public ResponseEntity<HOrder> updateOrder(@RequestBody HOrder order, UriComponentsBuilder ucBuilder) {
     	log.info("Updating order:" + order.toString());
   
@@ -92,7 +122,7 @@ public class AngularRestController {
                 
     }    
     
-    @RequestMapping(value = "/order/additem/{orderId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/order/additem/{orderId}", method = RequestMethod.POST)
     public ResponseEntity<Void> addItemToOrder(@PathVariable("orderId") long orderId, @RequestBody HOrderedItem orderedItem, UriComponentsBuilder ucBuilder) {
     	log.info("Adding item :"+orderedItem.toString() + " to order: "+orderId);
 
@@ -105,7 +135,7 @@ public class AngularRestController {
     
     //------------------- Items --------------------------------------------------------
      
-    @RequestMapping(value = "/item/fetchall", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/item/fetchall", method = RequestMethod.GET)
     public ResponseEntity<List<Item>> listAllItems() {
     	log.info("listAllItems()");
         List<Item> orders = Item.getAllItemsAsList();
@@ -113,110 +143,4 @@ public class AngularRestController {
         return new ResponseEntity<List<Item>>(orders, HttpStatus.OK);
     }   
     
-    //-------------------Retrieve All Users--------------------------------------------------------
-      
-    @RequestMapping(value = "/user/fetchall", method = RequestMethod.GET)
-    public ResponseEntity<List<HUser>> listAllUsers() {
-    	log.info("listAllUsers()");
-        List<HUser> users = userService.findAllUsers();
-        if(users.isEmpty()){
-            return new ResponseEntity<List<HUser>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
-        }
-        return new ResponseEntity<List<HUser>>(users, HttpStatus.OK);
-    }    
-    
-//  
-//     
-//    //-------------------Retrieve Single User--------------------------------------------------------
-//      
-//    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<User> getUser(@PathVariable("id") long id) {
-//        System.out.println("Fetching User with id " + id);
-//        User user = userService.findById(id);
-//        if (user == null) {
-//            System.out.println("User with id " + id + " not found");
-//            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<User>(user, HttpStatus.OK);
-//    }
-//  
-//      
-//      
-    //-------------------Create a User--------------------------------------------------------
-      
-    @RequestMapping(value = "/user/create", method = RequestMethod.POST)
-    public ResponseEntity<Void> createUser(@RequestBody HUser user,    UriComponentsBuilder ucBuilder) {
-    	log.info("Creating User:" + user.getFirstName() + " "+ user.getLastName());
-  
-        try {
-        	userService.addUser(user);
-        	
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri()); // TODO ??? why error on console??
-            return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
-        } catch (UserAlreadyExistsError eExists) {
-        	log.info("User already exists:" + user.getFirstName() + " "+ user.getLastName());
-            return new ResponseEntity<Void>(HttpStatus.CONFLICT);        	
-        } catch (Exception e) {
-        	log.info("Unexpected error creating user:" + user.getFirstName() + " "+ user.getLastName());
-            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);        	
-        }
-                
-    }
-//  
-//     
-//      
-//    //------------------- Update a User --------------------------------------------------------
-//      
-//    @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
-//    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
-//        System.out.println("Updating User " + id);
-//          
-//        User currentUser = userService.findById(id);
-//          
-//        if (currentUser==null) {
-//            System.out.println("User with id " + id + " not found");
-//            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-//        }
-//  
-//        currentUser.setUsername(user.getUsername());
-//        currentUser.setAddress(user.getAddress());
-//        currentUser.setEmail(user.getEmail());
-//          
-//        userService.updateUser(currentUser);
-//        return new ResponseEntity<User>(currentUser, HttpStatus.OK);
-//    }
-//  
-//     
-//     
-//    //------------------- Delete a User --------------------------------------------------------
-//      
-//    @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
-//    public ResponseEntity<User> deleteUser(@PathVariable("id") long id) {
-//        System.out.println("Fetching & Deleting User with id " + id);
-//  
-//        User user = userService.findById(id);
-//        if (user == null) {
-//            System.out.println("Unable to delete. User with id " + id + " not found");
-//            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-//        }
-//  
-//        userService.deleteUserById(id);
-//        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
-//    }
-//  
-//      
-//     
-//    //------------------- Delete All Users --------------------------------------------------------
-//      
-//    @RequestMapping(value = "/user/", method = RequestMethod.DELETE)
-//    public ResponseEntity<User> deleteAllUsers() {
-//        System.out.println("Deleting All Users");
-//  
-//        userService.deleteAllUsers();
-//        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
-//    }
-  
 }
-
-//ppp

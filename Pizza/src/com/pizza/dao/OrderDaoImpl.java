@@ -12,10 +12,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.pizza.general.OrderDoesntExistError;
-import com.pizza.general.UserAlreadyExistsError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
-import com.pizza.model.HUser;
 
 @Repository("orderDao")
 @Transactional(propagation=Propagation.REQUIRED)

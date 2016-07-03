@@ -1,4 +1,4 @@
-package com.pizza.configuration;
+package com.pizza.security;
 
 import java.util.List;
 

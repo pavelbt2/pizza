@@ -1,4 +1,4 @@
-package com.pizza.configuration;
+package com.pizza.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.pizza.controller;
+package com.pizza.security;
 
 import java.io.Serializable;
 

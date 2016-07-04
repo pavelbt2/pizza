@@ -110,8 +110,8 @@ public class AngularRestController {
         	orderService.updateOrder(order);
         	
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/order/{id}").buildAndExpand(order.getId()).toUri()); // TODO ??? why error on console??
-            return new ResponseEntity<HOrder>(headers, HttpStatus.OK);
+            headers.setLocation(ucBuilder.path("/order/{id}").buildAndExpand(order.getId()).toUri());
+            return new ResponseEntity<HOrder>(headers, HttpStatus.OK); // TODO remove this redirection!
         } catch (OrderDoesntExistError eExists) {
         	log.info("Order with id " + order.getId() + " not found");
         	return new ResponseEntity<HOrder>(HttpStatus.NOT_FOUND);      	
@@ -132,6 +132,16 @@ public class AngularRestController {
 // 	headers.setLocation(ucBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri()); // TODO ??? why error on console??
     	return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
+    
+    @RequestMapping(value = "/api/order/create", method = RequestMethod.POST)
+    public ResponseEntity<HOrder> createNewOrder(UriComponentsBuilder ucBuilder) {
+    	log.info("Creating new order order");
+    	
+    	HOrder order = orderService.createNewOrder();
+    	
+    	return new ResponseEntity<HOrder>(order, HttpStatus.OK);
+    }
+    
     
     //------------------- Items --------------------------------------------------------
      

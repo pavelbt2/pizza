@@ -14,9 +14,13 @@ public interface OrderService {
 
 	public HOrder findOrder(long orderId);
 	
-	// creates new order for current date if none exist yet
+	// returns dummy order if no order for today yet
 	public HOrder getCurrentOrder();
 
-	public void addItemToOrder(long orderId, HOrderedItem orderedItem);	
+	// creates new order for today.
+	// if order already exists - returns it
+	public HOrder createNewOrder();
+	
+	public void addItemToOrder(long orderId, HOrderedItem orderedItem);		
 	
 }

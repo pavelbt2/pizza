@@ -24,10 +24,6 @@ import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.pizza.security.JwtAuthenticationFilter;
-import com.pizza.security.JwtAuthenticationProvider;
-import com.pizza.security.RestAuthenticationEntryPoint;
-
 
 //This configuration creates a Servlet Filter known as the springSecurityFilterChain 
 //which is responsible for all the security (protecting the application URLs, 

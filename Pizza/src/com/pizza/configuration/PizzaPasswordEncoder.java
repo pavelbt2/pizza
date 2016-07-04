@@ -1,4 +1,4 @@
-package com.pizza.security;
+package com.pizza.configuration;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

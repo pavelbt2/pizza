@@ -20,13 +20,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.pizza.configuration.JwtUtil;
 import com.pizza.general.OrderDoesntExistError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
 import com.pizza.model.Item;
-import com.pizza.security.JwtAuthenticationRequest;
-import com.pizza.security.JwtAuthenticationResponse;
-import com.pizza.security.JwtUtil;
 import com.pizza.service.OrderService;
  
 

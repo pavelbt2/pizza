@@ -1,4 +1,4 @@
-package com.pizza.security;
+package com.pizza.configuration;
 
 import java.util.ArrayList;
 import java.util.Collection;

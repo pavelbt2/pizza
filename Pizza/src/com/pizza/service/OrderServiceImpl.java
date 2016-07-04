@@ -7,10 +7,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pizza.configuration.JwtUser;
 import com.pizza.controller.AngularRestController;
 import com.pizza.dao.OrderDao;
 import com.pizza.general.OrderDoesntExistError;
@@ -64,8 +66,11 @@ public class OrderServiceImpl implements OrderService {
 		HOrder order = new HOrder();
 		order.setDate(getCurrentDate());
 		order.setStatus(OrderStatus.OPEN);
-		orderDao.createOrder(order); // this also sets the id of the order to newly generated one		
-		// TODO set user from JWT
+		String username = ((JwtUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername(); 
+		// TODO export to some user util
+		order.setResponsible(username);
+		
+		orderDao.createOrder(order); // this also sets the id of the order to newly generated one 		
 		log.info("New order created for "+order.getDate());
 		return order; // TODO if "already exist" exception - fetch and return existing order
 	}

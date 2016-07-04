@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -49,7 +50,10 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
 	        JwtAuthenticationToken authRequest = new JwtAuthenticationToken(authToken);
 
-	        return getAuthenticationManager().authenticate(authRequest);
+	        Authentication auth = getAuthenticationManager().authenticate(authRequest);
+	        SecurityContextHolder.getContext().setAuthentication(auth); 
+	        // important so that later can access the details from the code using the context
+	        return auth;
 	   }
 
 	    @Override

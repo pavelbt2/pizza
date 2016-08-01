@@ -32,6 +32,9 @@ public class HOrderedItem {
 	@Column(name = "USER", nullable = false)
 	private String user;
 	
+	@Column(name = "DETAILS", nullable = false)
+	private String details;	
+	
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="ORDER_ID", nullable=false)
     @JsonIgnore
@@ -75,6 +78,14 @@ public class HOrderedItem {
 
 	public void setOrder(HOrder order) {
 		this.order = order;
+	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
 	}
 	
 	

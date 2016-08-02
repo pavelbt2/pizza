@@ -20,13 +20,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 @Table(name="T_ORDER")
 public class HOrder {
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
 	@Column(name = "ORDER_DATE", nullable = false)
-	@JsonFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern="yyyy-MM-dd", timezone="Israel") // TODO do it better way
 	private Date date;
 	
 	@Column(name = "STATUS", nullable = false)

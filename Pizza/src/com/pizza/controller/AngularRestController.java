@@ -100,27 +100,7 @@ public class AngularRestController {
     	}
         
     	return new ResponseEntity<HOrder>(order, HttpStatus.OK);
-    }
-    
-    @RequestMapping(value = "/api/order/update/{id}", method = RequestMethod.POST)
-    public ResponseEntity<HOrder> updateOrder(@RequestBody HOrder order, UriComponentsBuilder ucBuilder) {
-    	log.info("Updating order:" + order.toString());
-  
-        try {
-        	orderService.updateOrder(order);
-        	
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/order/{id}").buildAndExpand(order.getId()).toUri());
-            return new ResponseEntity<HOrder>(headers, HttpStatus.OK); // TODO remove this redirection!
-        } catch (OrderDoesntExistError eExists) {
-        	log.info("Order with id " + order.getId() + " not found");
-        	return new ResponseEntity<HOrder>(HttpStatus.NOT_FOUND);      	
-        } catch (Exception e) {
-        	log.error("Unexpected error updating order:" + order.toString());
-            return new ResponseEntity<HOrder>(HttpStatus.INTERNAL_SERVER_ERROR);        	
-        }
-                
-    }    
+    }     
     
     @RequestMapping(value = "/api/order/additem/{orderId}", method = RequestMethod.POST)
     public ResponseEntity<Void> addItemToOrder(@PathVariable("orderId") long orderId, @RequestBody HOrderedItem orderedItem, UriComponentsBuilder ucBuilder) {

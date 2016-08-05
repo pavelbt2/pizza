@@ -10,8 +10,8 @@ import com.pizza.jackson.OrderStatusJacksonSerializer;
 public enum OrderStatus {
 
 	OPEN("Open"),
-	SUBMITTED("Submitted"),
-	CLOSED("Closed")
+	ORDERED("Ordered"),
+	RECEIVED("Received")
 	;
 	
 	private final String pretty;

@@ -16,8 +16,8 @@ public interface OrderDao {
 
 	public void createOrder(HOrder order);
 	
-	public HOrder findById(long orderId);
-
+	public HOrder findById(long orderId, boolean lockForUpdate);
+	
 	public HOrder findByDate(Date currentDate);
 
 	public void saveOrderedItem(HOrderedItem orderedItem);

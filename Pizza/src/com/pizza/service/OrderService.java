@@ -3,14 +3,13 @@ package com.pizza.service;
 import java.util.List;
 
 import com.pizza.general.OrderDoesntExistError;
+import com.pizza.general.OrderNotOpenError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
 
 public interface OrderService {
 
 	public List<HOrder> findAllOrders();
-
-	public void updateOrder(HOrder order) throws OrderDoesntExistError;
 
 	public HOrder findOrder(long orderId);
 	
@@ -21,6 +20,8 @@ public interface OrderService {
 	// if order already exists - returns it
 	public HOrder createNewOrder();
 	
-	public void addItemToOrder(long orderId, HOrderedItem orderedItem);		
+	public void addItemToOrder(long orderId, HOrderedItem orderedItem);
+
+	public HOrder submitOrder(long orderId) throws OrderDoesntExistError, OrderNotOpenError;		
 	
 }

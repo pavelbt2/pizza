@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,10 +32,14 @@ public class OrderDaoImpl extends AbstractDao implements OrderDao {
 	}
 
 	@Override
-	public HOrder findById(long orderId) {
+	public HOrder findById(long orderId, boolean lockForUpdate) {
         Criteria criteria = getSession().createCriteria(HOrder.class);
         criteria.add(Restrictions.eq("id",orderId));
-        HOrder order = (HOrder) criteria.uniqueResult();              
+        if (lockForUpdate) {
+        	criteria.setLockMode(LockMode.PESSIMISTIC_WRITE);
+        }
+        HOrder order = (HOrder) criteria.uniqueResult();
+        
         return order;
 	}	
 	
@@ -46,18 +52,8 @@ public class OrderDaoImpl extends AbstractDao implements OrderDao {
 
 	
 	@Override
-	public void updateOrder(HOrder order) throws OrderDoesntExistError {
-		HOrder existingOrder = findById(order.getId());		
-		if (existingOrder == null ) {
-			throw new OrderDoesntExistError(order.getId());
-		}
-		
-		// TODO move this logic to service?
-		existingOrder.setDate(order.getDate());
-		existingOrder.setResponsible(order.getResponsible());
-		
-		getSession().update(existingOrder);
-		// TODO catch exception anyway - if was already deleted somehow
+	public void updateOrder(HOrder order) {		
+		getSession().update(order);
 	}
 
 	@Override

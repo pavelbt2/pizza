@@ -16,6 +16,7 @@ import com.pizza.configuration.JwtUser;
 import com.pizza.controller.AngularRestController;
 import com.pizza.dao.OrderDao;
 import com.pizza.general.OrderDoesntExistError;
+import com.pizza.general.OrderNotOpenError;
 import com.pizza.general.PizzaError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
@@ -34,11 +35,6 @@ public class OrderServiceImpl implements OrderService {
 	public List<HOrder> findAllOrders() {
 		return orderDao.findAllOrders();
 	}
-
-	@Override
-	public void updateOrder(HOrder order) throws OrderDoesntExistError {
-		orderDao.updateOrder(order);
-	}
 	
 	private Date getCurrentDate() {
 		LocalDate currentDate = LocalDate.now();
@@ -47,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public HOrder findOrder(long orderId) {
-		return orderDao.findById(orderId);	
+		return orderDao.findById(orderId, false);	
 	}
 
 	@Override
@@ -81,6 +77,28 @@ public class OrderServiceImpl implements OrderService {
 		HOrder order = findOrder(orderId);
 		orderedItem.setOrder(order);
 		orderDao.saveOrderedItem(orderedItem);		
+	}
+
+	@Override
+	public HOrder submitOrder(long orderId) throws OrderDoesntExistError, OrderNotOpenError {
+		HOrder order = orderDao.findById(orderId, true);		
+		if (order == null) { 
+			throw new OrderDoesntExistError(orderId);
+		}
+		
+		if (!OrderStatus.OPEN.equals(order.getStatus() )) {
+			throw new OrderNotOpenError(orderId);
+		} 
+		
+		// TODO verify user is responsible
+		
+		order.setStatus(OrderStatus.ORDERED);
+		orderDao.updateOrder(order);
+		
+					
+		// TODO send mail. together with transaction??
+		
+		return order;
 	}	
 
 }

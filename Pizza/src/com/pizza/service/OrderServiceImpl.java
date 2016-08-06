@@ -18,6 +18,7 @@ import com.pizza.dao.OrderDao;
 import com.pizza.general.OrderDoesntExistError;
 import com.pizza.general.OrderNotOpenError;
 import com.pizza.general.PizzaError;
+import com.pizza.general.UnauthorizedUserError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
 import com.pizza.model.OrderStatus;
@@ -29,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
 	static Logger log = Logger.getLogger(OrderServiceImpl.class.getName());
 
 	@Autowired
-	private OrderDao orderDao;	
+	private OrderDao orderDao;
 
 	@Override
 	public List<HOrder> findAllOrders() {
@@ -80,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public HOrder submitOrder(long orderId) throws OrderDoesntExistError, OrderNotOpenError {
+	public HOrder submitOrder(long orderId) throws OrderDoesntExistError, OrderNotOpenError, UnauthorizedUserError {
 		HOrder order = orderDao.findById(orderId, true);		
 		if (order == null) { 
 			throw new OrderDoesntExistError(orderId);
@@ -91,6 +92,10 @@ public class OrderServiceImpl implements OrderService {
 		} 
 		
 		// TODO verify user is responsible
+		JwtUser loggedInUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (!order.getResponsible().equals(loggedInUser.getUsername())) {
+			throw new UnauthorizedUserError();
+		}
 		
 		order.setStatus(OrderStatus.ORDERED);
 		orderDao.updateOrder(order);

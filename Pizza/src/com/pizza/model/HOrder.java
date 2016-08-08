@@ -39,7 +39,7 @@ public class HOrder {
 	@Transient
 	private boolean isValid = true;
 	
-	@OneToMany(fetch= FetchType.EAGER, mappedBy="order") // TODO refactor to be lazy - not that easy..
+	@OneToMany(fetch= FetchType.LAZY, mappedBy="order")
 	private Set<HOrderedItem> items;
 
 	@Override

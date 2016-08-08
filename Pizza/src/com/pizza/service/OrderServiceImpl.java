@@ -4,8 +4,10 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,8 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public List<HOrder> findAllOrders() {
-		return orderDao.findAllOrders();
+		List<HOrder> orders = orderDao.findAllOrders();
+		return orders;
 	}
 	
 	private Date getCurrentDate() {
@@ -44,7 +47,12 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public HOrder findOrder(long orderId) {
-		return orderDao.findById(orderId, false);	
+		HOrder order =  orderDao.findById(orderId, false);
+		if (order != null) {
+			// populate items in hibernate object		
+			Hibernate.initialize(order.getItems());
+		}
+		return order;
 	}
 
 	@Override
@@ -52,8 +60,10 @@ public class OrderServiceImpl implements OrderService {
 		HOrder order =  orderDao.findByDate(getCurrentDate());
 		if (order == null) {
 			order = new HOrder();
-			order.setValid(false);
-				
+			order.setValid(false);				
+		} else {
+			// populate items in hibernate object
+			Hibernate.initialize(order.getItems());
 		}
 		return order;
 	}
@@ -75,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public void addItemToOrder(long orderId, HOrderedItem orderedItem) {
-		HOrder order = findOrder(orderId);
+		HOrder order =  orderDao.findById(orderId, false);
 		orderedItem.setOrder(order);
 		orderDao.saveOrderedItem(orderedItem);		
 	}

@@ -81,6 +81,8 @@ public class AngularRestController {
 		return getOrderInner(orderId);
 	}
 
+	// get current order
+	// TODO refactor - this is ugly
 	@RequestMapping(value = "/api/order/get", method = RequestMethod.GET)
 	public ResponseEntity<HOrder> getOrder() {
 		return getOrderInner(null);

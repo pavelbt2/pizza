@@ -12,9 +12,15 @@ public interface OrderService {
 
 	public List<HOrder> findAllOrders();
 
+	/*
+ 	 * The order contains ordered items.
+	 */
 	public HOrder findOrder(long orderId);
 	
-	// returns dummy order if no order for today yet
+	/* 
+	 * Returns dummy order if no order for today yet.
+	 * The order contains ordered items.
+	 */
 	public HOrder getCurrentOrder();
 
 	// creates new order for today.

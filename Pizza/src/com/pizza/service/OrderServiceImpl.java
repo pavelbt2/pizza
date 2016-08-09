@@ -51,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
 		if (order != null) {
 			// populate items in hibernate object		
 			Hibernate.initialize(order.getItems());
+			//
 		}
 		return order;
 	}

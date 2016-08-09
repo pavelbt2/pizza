@@ -23,7 +23,7 @@ public class HOrderedItem {
 	private long id;
 
 	@Column(name = "ITEM", nullable = false)
-	@Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.ORDINAL)
     private Item item;
 	
 	@Column(name = "COUNT", nullable = false)

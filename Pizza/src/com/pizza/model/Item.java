@@ -13,7 +13,7 @@ import com.pizza.jackson.ItemJacksonSerializer;
 @JsonDeserialize(using = ItemJacksonDeSerializer.class)
 // TODO @JsonValue??
 public enum Item {
-	PIZZA_SLICE("Pizza Slice", 12.5),
+	PIZZA_SLICE("Pizza Slice", 12.5), // must be first - order is important!
 	GREEK_SALAD("Greek Salad", 27.0),
 	HOME_SALAD("Home Salad", 25.0),
 	TUNA_SALAD("Tuna Salad", 25.0),

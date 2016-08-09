@@ -23,6 +23,7 @@ import com.pizza.general.PizzaError;
 import com.pizza.general.UnauthorizedUserError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
+import com.pizza.model.Item;
 import com.pizza.model.OrderStatus;
 
 @Service("orderService")
@@ -51,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
 		if (order != null) {
 			// populate items in hibernate object		
 			Hibernate.initialize(order.getItems());
-			//
+			completeSparePizzaSlices(order);
 		}
 		return order;
 	}
@@ -65,6 +66,8 @@ public class OrderServiceImpl implements OrderService {
 		} else {
 			// populate items in hibernate object
 			Hibernate.initialize(order.getItems());
+			completeSparePizzaSlices(order);
+			// TODO compine with findOrder()
 		}
 		return order;
 	}
@@ -117,4 +120,41 @@ public class OrderServiceImpl implements OrderService {
 		return order;
 	}	
 
+	// warning - use in relevant places and with caution. 
+	private void completeSparePizzaSlices(HOrder order) {
+		if (order.getItems() == null || order.getItems().isEmpty()) {
+			// nothing to do
+			return;
+		}
+		
+		// count slices. Don't use streams cause ordered by item id
+		int nSliceItems = 0;
+		int nSlices = 0;		
+		for (HOrderedItem oItem : order.getItems()) {
+			if (!Item.PIZZA_SLICE.equals(oItem.getItem())) { 
+				break; // can stop cause ordered by item id and pizza slice is first
+			}
+			nSliceItems ++;
+			nSlices += oItem.getCount();
+		}
+		
+		// TODO fill with description with minimum total count
+		
+		// Add slices as needed
+		// TODO support other pizza sizes
+		if ((nSlices % 8) == 0) {
+			return; // no need to add slices
+		}
+		int nDummySlices = 8 - (nSlices % 8);
+		String details = order.getItems().get(nSliceItems-1).getDetails();
+		
+		HOrderedItem spareSlices = new HOrderedItem();
+		spareSlices.setItem(Item.PIZZA_SLICE);
+		spareSlices.setDetails(details);
+		spareSlices.setCount(nDummySlices);
+		spareSlices.setUser("sparessssss");
+		
+		order.getItems().add(nSliceItems, spareSlices);
+	}
+	
 }

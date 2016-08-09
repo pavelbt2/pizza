@@ -1,6 +1,7 @@
 package com.pizza.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,7 +43,7 @@ public class HOrder {
 	
 	@OneToMany(fetch= FetchType.LAZY, mappedBy="order")
 	@OrderBy("item")
-	private Set<HOrderedItem> items;
+	private List<HOrderedItem> items;
 
 	@Override
 	public String toString() {
@@ -78,12 +79,12 @@ public class HOrder {
 	}
 
 
-	public Set<HOrderedItem> getItems() {
+	public List<HOrderedItem> getItems() {
 		return items;
 	}
 
 
-	public void setItems(Set<HOrderedItem> items) {
+	public void setItems(List<HOrderedItem> items) {
 		this.items = items;
 	}
 

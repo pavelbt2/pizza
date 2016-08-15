@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,8 +26,8 @@ public class OrderDaoImpl extends AbstractDao implements OrderDao {
 	@Override
 	public List<HOrder> findAllOrders() {
 		Criteria criteria = getSession().createCriteria(HOrder.class)
-				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY); // otherwise  -returns ordersXoreder-items
+		criteria.addOrder(Order.desc(HOrder.NATIVE_ORDER_FIELD));
 		List<HOrder> orders =  (List<HOrder>) criteria.list();
 		return orders;
 	}

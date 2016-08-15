@@ -18,6 +18,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name="T_ORDERED_ITEM")
 public class HOrderedItem {
 
+	public static final String NATIVE_ORDER_FIELD = "order";
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;

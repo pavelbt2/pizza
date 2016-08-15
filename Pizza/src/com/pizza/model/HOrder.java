@@ -22,6 +22,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 @Table(name="T_ORDER")
 public class HOrder {
+
+	public static final String NATIVE_ORDER_FIELD = "date";
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,7 +44,7 @@ public class HOrder {
 	private boolean isValid = true;
 	
 	@OneToMany(fetch= FetchType.LAZY, mappedBy="order")
-	@OrderBy("item")
+	@OrderBy(HOrderedItem.NATIVE_ORDER_FIELD)
 	private List<HOrderedItem> items;
 
 	@Override

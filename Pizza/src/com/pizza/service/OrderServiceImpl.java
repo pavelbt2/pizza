@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.pizza.configuration.JwtUser;
 import com.pizza.controller.AngularRestController;
 import com.pizza.dao.OrderDao;
-import com.pizza.general.OrderDoesntExistError;
-import com.pizza.general.OrderNotOpenError;
-import com.pizza.general.PizzaError;
-import com.pizza.general.UnauthorizedUserError;
+import com.pizza.error.OrderAlreadyExistError;
+import com.pizza.error.OrderDoesntExistError;
+import com.pizza.error.OrderDoesntExistError;
+import com.pizza.error.OrderNotOpenError;
+import com.pizza.error.PizzaError;
+import com.pizza.error.UnauthorizedUserError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
 import com.pizza.model.Item;
@@ -73,15 +76,22 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	@Override
-	public HOrder createNewOrder() {
+	public HOrder createNewOrder() throws OrderAlreadyExistError {
 		HOrder order = new HOrder();
-		order.setDate(getCurrentDate());
+		Date date = getCurrentDate();
+		order.setDate(date);
 		order.setStatus(OrderStatus.OPEN);
 		String username = ((JwtUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername(); 
 		// TODO export to some user util
 		order.setResponsible(username);
 		
-		orderDao.createOrder(order); // this also sets the id of the order to newly generated one 		
+		try {
+			orderDao.createOrder(order); // this also sets the id of the order to newly generated one
+		} catch (ConstraintViolationException e) {
+			log.error("Error creating new order", e);
+			// probably 2 users tried to create the order at same time
+			throw new OrderAlreadyExistError(date); 
+		}
 		log.info("New order created for "+order.getDate());
 		return order; // TODO if "already exist" exception - fetch and return existing order
 	}
@@ -98,7 +108,7 @@ public class OrderServiceImpl implements OrderService {
 	public HOrder submitOrder(long orderId) throws OrderDoesntExistError, OrderNotOpenError, UnauthorizedUserError {
 		HOrder order = orderDao.findById(orderId, true);		
 		if (order == null) { 
-			throw new OrderDoesntExistError(orderId);
+			throw new OrderDoesntExistError(orderId);			
 		}
 		
 		if (!OrderStatus.OPEN.equals(order.getStatus() )) {

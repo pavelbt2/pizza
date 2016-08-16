@@ -21,9 +21,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.pizza.configuration.JwtUtil;
-import com.pizza.general.OrderDoesntExistError;
-import com.pizza.general.OrderNotOpenError;
-import com.pizza.general.PizzaError;
+import com.pizza.error.OrderAlreadyExistError;
+import com.pizza.error.OrderDoesntExistError;
+import com.pizza.error.OrderNotOpenError;
+import com.pizza.error.PizzaError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
 import com.pizza.model.Item;
@@ -116,7 +117,7 @@ public class AngularRestController {
 	}
 
 	@RequestMapping(value = "/api/order/create", method = RequestMethod.POST)
-	public ResponseEntity<HOrder> createNewOrder(UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<HOrder> createNewOrder(UriComponentsBuilder ucBuilder) throws OrderAlreadyExistError {
 		log.info("Creating new order order");
 
 		HOrder order = orderService.createNewOrder();

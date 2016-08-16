@@ -1,4 +1,4 @@
-package com.pizza.general;
+package com.pizza.error;
 
 public class UnauthorizedUserError extends PizzaError {
 		

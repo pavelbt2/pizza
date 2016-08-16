@@ -1,8 +1,10 @@
-package com.pizza.general;
+package com.pizza.error;
+
+import java.util.Date;
 
 public class OrderDoesntExistError extends PizzaError {
-	
-	private static final long serialVersionUID = -3668011625570724170L;
+		
+	private static final long serialVersionUID = 5217530599763754606L;
 	
 	private final long orderId;
 	
@@ -13,4 +15,5 @@ public class OrderDoesntExistError extends PizzaError {
 	public String toString() {
 		return "Order with id = " + orderId + "doesn't exist";
 	}
+	
 }

@@ -3,7 +3,7 @@ package com.pizza.dao;
 import java.util.Date;
 import java.util.List;
 
-import com.pizza.general.OrderDoesntExistError;
+import com.pizza.error.OrderDoesntExistError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
 

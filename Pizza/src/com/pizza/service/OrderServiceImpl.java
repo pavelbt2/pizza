@@ -99,8 +99,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public void addItemToOrder(long orderId, HOrderedItem orderedItem) {
-		HOrder order =  orderDao.findById(orderId, false);
+		HOrder order =  orderDao.findById(orderId, true);
 		orderedItem.setOrder(order);
+		// TODO catch exception for existing item for user and handle it
 		orderDao.saveOrderedItem(orderedItem);		
 	}
 

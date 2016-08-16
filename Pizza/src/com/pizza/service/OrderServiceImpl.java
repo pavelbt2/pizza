@@ -38,15 +38,12 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private OrderDao orderDao;
 
+	/****************************** READ **************************************************/
+		
 	@Override
 	public List<HOrder> findAllOrders() {
 		List<HOrder> orders = orderDao.findAllOrders();
 		return orders;
-	}
-	
-	private Date getCurrentDate() {
-		LocalDate currentDate = LocalDate.now();
-		return Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
 
 	@Override
@@ -74,6 +71,9 @@ public class OrderServiceImpl implements OrderService {
 		}
 		return order;
 	}
+	
+	
+	/****************************** WRITE **************************************************/
 	
 	@Override
 	public HOrder createNewOrder() throws OrderAlreadyExistError {
@@ -130,6 +130,13 @@ public class OrderServiceImpl implements OrderService {
 		return order;
 	}	
 
+	/****************************** HELPER METHODS **************************************************/
+	
+	private Date getCurrentDate() {
+		LocalDate currentDate = LocalDate.now();
+		return Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	}
+	
 	// warning - use in relevant places and with caution. 
 	private void completeSparePizzaSlices(HOrder order) {
 		if (order.getItems() == null || order.getItems().isEmpty()) {
@@ -147,11 +154,8 @@ public class OrderServiceImpl implements OrderService {
 			nSliceItems ++;
 			nSlices += oItem.getCount();
 		}
-		
-		// TODO fill with description with minimum total count
-		
+				
 		// Add slices as needed
-		// TODO support other pizza sizes
 		if ((nSlices % 8) == 0) {
 			return; // no need to add slices
 		}

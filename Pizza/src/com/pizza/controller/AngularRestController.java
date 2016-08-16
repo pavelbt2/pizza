@@ -78,26 +78,19 @@ public class AngularRestController {
 
 	@RequestMapping(value = "/api/order/get/{id}", method = RequestMethod.GET)
 	public ResponseEntity<HOrder> getOrder(@PathVariable("id") long orderId) {
-		return getOrderInner(orderId);
+		log.info("getOrder() id=" + orderId);
+
+		HOrder order = orderService.findOrder(orderId);
+
+		return new ResponseEntity<HOrder>(order, HttpStatus.OK);
 	}
 
 	// get current order
-	// TODO refactor - this is ugly
-	@RequestMapping(value = "/api/order/get", method = RequestMethod.GET)
-	public ResponseEntity<HOrder> getOrder() {
-		return getOrderInner(null);
-	}
+	@RequestMapping(value = "/api/order/getcurrent", method = RequestMethod.GET)
+	public ResponseEntity<HOrder> getCurrentOrder() {
+		log.info("getCurrentOrder()");
 
-	private ResponseEntity<HOrder> getOrderInner(Long orderId) {
-		log.info("getOrder() id=" + orderId);
-
-		HOrder order = null;
-
-		if (orderId == null) {
-			order = orderService.getCurrentOrder();
-		} else {
-			order = orderService.findOrder(orderId);
-		}
+		HOrder order = orderService.getCurrentOrder();
 
 		return new ResponseEntity<HOrder>(order, HttpStatus.OK);
 	}

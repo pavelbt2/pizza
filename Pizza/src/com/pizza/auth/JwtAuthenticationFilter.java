@@ -28,11 +28,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		public JwtAuthenticationFilter() {
 			super("/**");
 		} // TODO needed?
-		
-//		@Override
-//		protected boolean requiresAuthentication(HttpServletRequest request, HttpServletResponse response) {
-//			return true;
-//		} // TODO needed?
 	   
 	    @Override
 	    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)

@@ -18,8 +18,6 @@ public class JwtUtil {
     //TODO @Value("${jwt.secret}")
     private String secret = "12345";
 
-    // TODO expiration
-
     /**
      * Tries to parse specified String as a JWT token. If successful, returns User object with username, 
      * id and role prefilled (extracted from token).
@@ -60,7 +58,7 @@ public class JwtUtil {
 
         return Jwts.builder()
                 .setClaims(claims)
-                //TODO .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000)
+                //.setExpiration(new Date(System.currentTimeMillis() + expiration * 1000)
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }

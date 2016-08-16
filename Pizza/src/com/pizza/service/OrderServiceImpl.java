@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pizza.auth.JwtUser;
 import com.pizza.dao.OrderDao;
+import com.pizza.error.ItemAlreadyOrderedByUser;
 import com.pizza.error.OrderAlreadyExistError;
 import com.pizza.error.OrderNotOpenError;
 import com.pizza.error.PizzaError;
@@ -93,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
 
 
 	@Override
-	public void addItemToOrder(long orderId, HOrderedItem orderedItem) throws OrderNotOpenError {
+	public void addItemToOrder(long orderId, HOrderedItem orderedItem) throws OrderNotOpenError, ItemAlreadyOrderedByUser {
 		HOrder order =  orderDao.findById(orderId, true);
 		
 		if (!OrderStatus.OPEN.equals(order.getStatus() )) {
@@ -102,8 +103,11 @@ public class OrderServiceImpl implements OrderService {
 		
 		orderedItem.setOrder(order);		
 		
-		// TODO catch exception for existing item for user and handle it
-		orderDao.saveOrderedItem(orderedItem);		
+		try {
+			orderDao.saveOrderedItem(orderedItem);
+		} catch (ConstraintViolationException e) {
+			throw new ItemAlreadyOrderedByUser(orderedItem.getItem(), orderedItem.getUser());
+		}
 	}
 
 	@Override

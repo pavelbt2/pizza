@@ -2,6 +2,7 @@ package com.pizza.service;
 
 import java.util.List;
 
+import com.pizza.error.ItemAlreadyOrderedByUser;
 import com.pizza.error.OrderAlreadyExistError;
 import com.pizza.error.OrderNotOpenError;
 import com.pizza.error.UnauthorizedUserError;
@@ -27,7 +28,7 @@ public interface OrderService {
 	// if order already exists - throws exception
 	public HOrder createNewOrder() throws OrderAlreadyExistError;
 	
-	public void addItemToOrder(long orderId, HOrderedItem orderedItem) throws OrderNotOpenError;
+	public void addItemToOrder(long orderId, HOrderedItem orderedItem) throws OrderNotOpenError, ItemAlreadyOrderedByUser;
 
 	public HOrder submitOrder(long orderId) throws OrderNotOpenError, UnauthorizedUserError;		
 	

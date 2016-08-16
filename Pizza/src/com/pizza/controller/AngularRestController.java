@@ -104,7 +104,7 @@ public class AngularRestController {
 
 	@RequestMapping(value = "/api/order/additem/{orderId}", method = RequestMethod.POST)
 	public ResponseEntity<Void> addItemToOrder(@PathVariable("orderId") long orderId,
-			@RequestBody HOrderedItem orderedItem, UriComponentsBuilder ucBuilder) throws OrderNotOpenError {
+			@RequestBody HOrderedItem orderedItem, UriComponentsBuilder ucBuilder) throws PizzaError {
 		log.info("Adding item :" + orderedItem.toString() + " to order: " + orderId);
 
 		orderService.addItemToOrder(orderId, orderedItem);

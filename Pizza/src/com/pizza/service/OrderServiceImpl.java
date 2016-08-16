@@ -92,9 +92,15 @@ public class OrderServiceImpl implements OrderService {
 
 
 	@Override
-	public void addItemToOrder(long orderId, HOrderedItem orderedItem) {
+	public void addItemToOrder(long orderId, HOrderedItem orderedItem) throws OrderNotOpenError {
 		HOrder order =  orderDao.findById(orderId, true);
-		orderedItem.setOrder(order);
+		
+		if (!OrderStatus.OPEN.equals(order.getStatus() )) {
+			throw new OrderNotOpenError(orderId);
+		} 
+		
+		orderedItem.setOrder(order);		
+		
 		// TODO catch exception for existing item for user and handle it
 		orderDao.saveOrderedItem(orderedItem);		
 	}

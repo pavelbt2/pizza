@@ -1,4 +1,4 @@
-package com.pizza.configuration;
+package com.pizza.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

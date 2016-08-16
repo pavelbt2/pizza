@@ -20,7 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.pizza.configuration.JwtUtil;
+import com.pizza.auth.JwtUtil;
 import com.pizza.error.OrderAlreadyExistError;
 import com.pizza.error.OrderNotOpenError;
 import com.pizza.error.PizzaError;

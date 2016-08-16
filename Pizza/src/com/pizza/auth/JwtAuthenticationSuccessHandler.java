@@ -1,4 +1,4 @@
-package com.pizza.configuration;
+package com.pizza.auth;
 
 
 import java.io.IOException;

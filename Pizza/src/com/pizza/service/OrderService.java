@@ -3,7 +3,6 @@ package com.pizza.service;
 import java.util.List;
 
 import com.pizza.error.OrderAlreadyExistError;
-import com.pizza.error.OrderDoesntExistError;
 import com.pizza.error.OrderNotOpenError;
 import com.pizza.error.UnauthorizedUserError;
 import com.pizza.model.HOrder;
@@ -30,6 +29,6 @@ public interface OrderService {
 	
 	public void addItemToOrder(long orderId, HOrderedItem orderedItem);
 
-	public HOrder submitOrder(long orderId) throws OrderDoesntExistError, OrderNotOpenError, UnauthorizedUserError;		
+	public HOrder submitOrder(long orderId) throws OrderNotOpenError, UnauthorizedUserError;		
 	
 }

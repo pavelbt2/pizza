@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.pizza.configuration.JwtUtil;
 import com.pizza.error.OrderAlreadyExistError;
-import com.pizza.error.OrderDoesntExistError;
 import com.pizza.error.OrderNotOpenError;
 import com.pizza.error.PizzaError;
 import com.pizza.model.HOrder;

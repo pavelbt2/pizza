@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.exception.ConstraintViolationException;
@@ -14,13 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.pizza.configuration.JwtUser;
-import com.pizza.controller.AngularRestController;
 import com.pizza.dao.OrderDao;
 import com.pizza.error.OrderAlreadyExistError;
-import com.pizza.error.OrderDoesntExistError;
-import com.pizza.error.OrderDoesntExistError;
 import com.pizza.error.OrderNotOpenError;
 import com.pizza.error.PizzaError;
 import com.pizza.error.UnauthorizedUserError;
@@ -106,11 +100,8 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public HOrder submitOrder(long orderId) throws OrderDoesntExistError, OrderNotOpenError, UnauthorizedUserError {
+	public HOrder submitOrder(long orderId) throws OrderNotOpenError, UnauthorizedUserError {
 		HOrder order = orderDao.findById(orderId, true);		
-		if (order == null) { 
-			throw new OrderDoesntExistError(orderId);			
-		}
 		
 		if (!OrderStatus.OPEN.equals(order.getStatus() )) {
 			throw new OrderNotOpenError(orderId);

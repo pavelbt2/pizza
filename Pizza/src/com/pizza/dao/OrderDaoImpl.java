@@ -5,16 +5,11 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.LockMode;
-import org.hibernate.LockOptions;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.pizza.error.OrderDoesntExistError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
 

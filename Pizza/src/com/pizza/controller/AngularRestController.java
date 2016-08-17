@@ -24,6 +24,7 @@ import com.pizza.auth.JwtUtil;
 import com.pizza.error.OrderAlreadyExistError;
 import com.pizza.error.OrderNotOpenError;
 import com.pizza.error.PizzaError;
+import com.pizza.error.UnauthorizedUserError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
 import com.pizza.model.Item;
@@ -119,12 +120,20 @@ public class AngularRestController {
 
 	@RequestMapping(value = "/api/order/submit/{orderId}", method = RequestMethod.POST)
 	public ResponseEntity<HOrder> submitOrder(@PathVariable("orderId") long orderId,
-			UriComponentsBuilder ucBuilder) throws PizzaError {
+			UriComponentsBuilder ucBuilder)  {
 		log.info("Submit order: " + orderId);
 
-		HOrder updatedOrder = orderService.submitOrder(orderId);
+		HttpStatus status = HttpStatus.OK;
+		
+		HOrder updatedOrder = null;
+		try {
+			updatedOrder = orderService.submitOrder(orderId);
+		} catch (OrderNotOpenError | UnauthorizedUserError e) {
+			// the user might have tried to trick the system
+			status = HttpStatus.FORBIDDEN;			
+		}
 
-		return new ResponseEntity<HOrder>(updatedOrder, HttpStatus.OK);
+		return new ResponseEntity<HOrder>(updatedOrder, status);
 	}
 
 	// ------------------- Items --------------------------------------------------------

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.pizza.auth.JwtUtil;
+import com.pizza.error.ItemAlreadyOrderedByUser;
 import com.pizza.error.OrderAlreadyExistError;
 import com.pizza.error.OrderNotOpenError;
 import com.pizza.error.PizzaError;
@@ -98,15 +99,20 @@ public class AngularRestController {
 
 	@RequestMapping(value = "/api/order/additem/{orderId}", method = RequestMethod.POST)
 	public ResponseEntity<Void> addItemToOrder(@PathVariable("orderId") long orderId,
-			@RequestBody HOrderedItem orderedItem, UriComponentsBuilder ucBuilder) throws PizzaError {
+			@RequestBody HOrderedItem orderedItem, UriComponentsBuilder ucBuilder) {
 		log.info("Adding item :" + orderedItem.toString() + " to order: " + orderId);
 
-		orderService.addItemToOrder(orderId, orderedItem);
+		HttpStatus status = HttpStatus.OK;
+		
+		try {
+			orderService.addItemToOrder(orderId, orderedItem);
+		} catch (OrderNotOpenError e) {
+			status = HttpStatus.FORBIDDEN;
+		} catch (ItemAlreadyOrderedByUser e) {
+			status = HttpStatus.CONFLICT;
+		}
 
-		HttpHeaders headers = new HttpHeaders();
-		// headers.setLocation(ucBuilder.path("/user/{id}").buildAndExpand(user.getId()).toUri());
-		// // TODO ??? why error on console??
-		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+		return new ResponseEntity<Void>(status);
 	}
 
 	@RequestMapping(value = "/api/order/create", method = RequestMethod.POST)

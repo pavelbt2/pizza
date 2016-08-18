@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.pizza.auth.JwtUtil;
+import com.pizza.error.EmailError;
 import com.pizza.error.ItemAlreadyOrderedByUser;
 import com.pizza.error.OrderAlreadyExistError;
 import com.pizza.error.OrderNotOpenError;
@@ -144,6 +145,8 @@ public class AngularRestController {
 		} catch (UnauthorizedUserError e) {
 			// the user might have tried to trick the system
 			status = HttpStatus.UNAUTHORIZED;
+		} catch (EmailError e) {
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		
 		return new ResponseEntity<HOrder>(updatedOrder, status);

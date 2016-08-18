@@ -7,7 +7,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pizza.auth.JwtUser;
 import com.pizza.dao.OrderDao;
+import com.pizza.error.EmailError;
 import com.pizza.error.ItemAlreadyOrderedByUser;
 import com.pizza.error.OrderAlreadyExistError;
 import com.pizza.error.OrderNotOpenError;
@@ -30,6 +34,12 @@ import com.pizza.model.OrderStatus;
 public class OrderServiceImpl implements OrderService {
 	
 	static Logger log = Logger.getLogger(OrderServiceImpl.class.getName());
+	
+	@Autowired
+	private MailSender mailSender;	
+	
+	@Autowired
+    private ObjectFactory<SimpleMailMessage> mailFactory;
 
 	@Autowired
 	private OrderDao orderDao;
@@ -111,7 +121,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public HOrder submitOrder(long orderId) throws OrderNotOpenError, UnauthorizedUserError {
+	public HOrder submitOrder(long orderId) throws OrderNotOpenError, UnauthorizedUserError, EmailError {
 		HOrder order = orderDao.findById(orderId, true);		
 		
 		if (!OrderStatus.OPEN.equals(order.getStatus() )) {
@@ -127,8 +137,9 @@ public class OrderServiceImpl implements OrderService {
 		order.setStatus(OrderStatus.ORDERED);
 		orderDao.updateOrder(order);
 		
-					
-		// TODO send mail. together with transaction??
+		// transaction will be aborted on error to send
+		String body = "Will arrive in 30-60 minutes";
+		sendEmail("order submitted", ""+body);		
 		
 		return order;
 	}	
@@ -172,6 +183,18 @@ public class OrderServiceImpl implements OrderService {
 		spareSlices.setUser("sparessssss");
 		
 		order.getItems().add(nSliceItems, spareSlices);
+	}
+	
+	private void sendEmail(String subject, String msgBody) throws EmailError {
+		try {
+			SimpleMailMessage mailMessage = mailFactory.getObject();
+			mailMessage.setSubject("Pizza notification: "+subject);
+			mailMessage.setText(msgBody);
+			mailSender.send(mailMessage);
+		} catch (Exception e) {
+			log.error("Failed to send email", e);
+			throw new EmailError();
+		}
 	}
 	
 }

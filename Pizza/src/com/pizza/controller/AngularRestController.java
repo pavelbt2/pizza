@@ -8,9 +8,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,19 +49,19 @@ public class AngularRestController {
 
 	// ------------------- Login --------------------------------------------------------
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<?> login(@RequestBody JwtAuthenticationRequest authenticationRequest)
-			throws AuthenticationException {
+	public ResponseEntity<?> login(@RequestBody JwtAuthenticationRequest authenticationRequest) {
 
+		try {
 		// Perform the security
 		final Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
 						authenticationRequest.getPassword()));
-		SecurityContextHolder.getContext().setAuthentication(authentication); // TODO
-																				// needed??
+		SecurityContextHolder.getContext().setAuthentication(authentication); // TODO needed??
+		
+		} catch (BadCredentialsException e) {
+			return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+		}
 
-		// Reload password post-security so we can generate token
-		// TODO final UserDetails userDetails =
-		// userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 		final String token = jwtUtil.generateToken(authenticationRequest.getUsername());
 
 		// Return the token
@@ -128,11 +128,14 @@ public class AngularRestController {
 		HOrder updatedOrder = null;
 		try {
 			updatedOrder = orderService.submitOrder(orderId);
-		} catch (OrderNotOpenError | UnauthorizedUserError e) {
+		} catch (OrderNotOpenError e) {
 			// the user might have tried to trick the system
 			status = HttpStatus.FORBIDDEN;			
+		} catch (UnauthorizedUserError e) {
+			// the user might have tried to trick the system
+			status = HttpStatus.UNAUTHORIZED;
 		}
-
+		
 		return new ResponseEntity<HOrder>(updatedOrder, status);
 	}
 

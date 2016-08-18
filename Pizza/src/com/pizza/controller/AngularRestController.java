@@ -116,12 +116,16 @@ public class AngularRestController {
 	}
 
 	@RequestMapping(value = "/api/order/create", method = RequestMethod.POST)
-	public ResponseEntity<HOrder> createNewOrder(UriComponentsBuilder ucBuilder) throws OrderAlreadyExistError {
+	public ResponseEntity<HOrder> createNewOrder(UriComponentsBuilder ucBuilder) {
 		log.info("Creating new order order");
 
-		HOrder order = orderService.createNewOrder();
-
-		return new ResponseEntity<HOrder>(order, HttpStatus.OK);
+		try {
+			HOrder order = orderService.createNewOrder();
+			return new ResponseEntity<HOrder>(order, HttpStatus.OK);
+		} catch (OrderAlreadyExistError e) {
+			return new ResponseEntity<HOrder>(HttpStatus.CONFLICT);
+		}
+		
 	}
 
 	@RequestMapping(value = "/api/order/submit/{orderId}", method = RequestMethod.POST)

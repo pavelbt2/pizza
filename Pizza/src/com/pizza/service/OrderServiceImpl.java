@@ -156,8 +156,8 @@ public class OrderServiceImpl implements OrderService {
 		return Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
 	
-	@Override
-	public void completeSparePizzaSlices(HOrder order) {
+	// use with cautious
+	private void completeSparePizzaSlices(HOrder order) {
 		if (order.getItems() == null || order.getItems().isEmpty()) {
 			// nothing to do
 			return;

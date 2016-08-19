@@ -16,6 +16,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 
@@ -45,7 +47,13 @@ public class HOrder {
 	
 	@OneToMany(fetch= FetchType.LAZY, mappedBy="order")
 	@OrderBy(HOrderedItem.NATIVE_ORDER_FIELD)
+	@Where(clause="item<>'PIZZA_SLICE'") //TODO any better way?
 	private List<HOrderedItem> items;
+	
+	@OneToMany(fetch= FetchType.LAZY, mappedBy="order")
+	@OrderBy(HOrderedItem.NATIVE_ORDER_FIELD)
+	@Where(clause="item='PIZZA_SLICE'") //TODO any better way?
+	private List<HSlice> slices;
 
 	@Override
 	public String toString() {

@@ -139,6 +139,9 @@ public class OrderServiceImpl implements OrderService {
 		
 		order.setStatus(OrderStatus.ORDERED);
 		orderDao.updateOrder(order);
+		// populate items in hibernate object		
+		Hibernate.initialize(order.getItems()); // TODO move this to Dao??
+		completeSparePizzaSlices(order);
 		
 		// transaction will be aborted on error to send
 		sendEmail("order submitted", "Will arrive in 30-60 minutes");		
@@ -153,8 +156,8 @@ public class OrderServiceImpl implements OrderService {
 		return Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
 	
-	// warning - use in relevant places and with caution. 
-	private void completeSparePizzaSlices(HOrder order) {
+	@Override
+	public void completeSparePizzaSlices(HOrder order) {
 		if (order.getItems() == null || order.getItems().isEmpty()) {
 			// nothing to do
 			return;

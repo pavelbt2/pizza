@@ -187,6 +187,9 @@ public class OrderServiceImpl implements OrderService {
 		order.getItems().add(nSliceItems, spareSlices);
 	}
 	
+	// TODO do it only on commit hook - before commit.
+	// otherwise the actual commit might fail (especially if there are 2 servers? 
+	// but didn't manage to reproduce. maybe depends on db lock mode? or is it hibernate?)
 	private void sendEmail(String subject, String msgBody) throws EmailError {
 		try {
 			SimpleMailMessage mailMessage = mailFactory.getObject();

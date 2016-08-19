@@ -125,8 +125,9 @@ public class AngularRestController {
 			return new ResponseEntity<HOrder>(order, HttpStatus.OK);
 		} catch (OrderAlreadyExistError e) {
 			return new ResponseEntity<HOrder>(HttpStatus.CONFLICT);
-		}
-		
+		} catch (EmailError e) {
+			return new ResponseEntity<HOrder>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
 	}
 
 	@RequestMapping(value = "/api/order/submit/{orderId}", method = RequestMethod.POST)

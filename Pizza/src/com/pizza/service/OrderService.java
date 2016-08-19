@@ -27,7 +27,7 @@ public interface OrderService {
 
 	// creates new order for today.
 	// if order already exists - throws exception
-	public HOrder createNewOrder() throws OrderAlreadyExistError;
+	public HOrder createNewOrder() throws OrderAlreadyExistError, EmailError;
 	
 	public void addItemToOrder(long orderId, HOrderedItem orderedItem) throws OrderNotOpenError, ItemAlreadyOrderedByUser;
 

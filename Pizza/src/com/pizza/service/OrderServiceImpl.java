@@ -82,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
 	/****************************** WRITE **************************************************/
 	
 	@Override
-	public HOrder createNewOrder() throws OrderAlreadyExistError {
+	public HOrder createNewOrder() throws OrderAlreadyExistError, EmailError {
 		HOrder order = new HOrder();
 		Date date = getCurrentDate();
 		order.setDate(date);
@@ -98,6 +98,10 @@ public class OrderServiceImpl implements OrderService {
 			// probably 2 users tried to create the order at same time
 			throw new OrderAlreadyExistError(date); 
 		}
+		
+		// transaction will be aborted on error to send
+		sendEmail("ordering pizza in 15 minutes", "please fill your orders");	
+		
 		log.info("New order created for "+order.getDate());
 		return order; // TODO if "already exist" exception - fetch and return existing order
 	}
@@ -128,7 +132,6 @@ public class OrderServiceImpl implements OrderService {
 			throw new OrderNotOpenError(orderId);
 		} 
 		
-		// TODO verify user is responsible
 		JwtUser loggedInUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (!order.getResponsible().equals(loggedInUser.getUsername())) {
 			throw new UnauthorizedUserError();
@@ -138,8 +141,7 @@ public class OrderServiceImpl implements OrderService {
 		orderDao.updateOrder(order);
 		
 		// transaction will be aborted on error to send
-		String body = "Will arrive in 30-60 minutes";
-		sendEmail("order submitted", ""+body);		
+		sendEmail("order submitted", "Will arrive in 30-60 minutes");		
 		
 		return order;
 	}	

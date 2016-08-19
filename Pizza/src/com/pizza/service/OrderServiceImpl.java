@@ -100,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		
 		// transaction will be aborted on error to send
-		sendEmail("ordering pizza in 15 minutes", "please fill your orders");	
+		sendEmail(""+username+" ordering pizza in 15 minutes", "please fill your orders");	
 		
 		log.info("New order created for "+order.getDate());
 		return order; // TODO if "already exist" exception - fetch and return existing order

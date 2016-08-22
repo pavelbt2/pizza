@@ -93,9 +93,16 @@ public class HOrder {
 		return items;
 	}
 
-
 	public void setItems(List<HOrderedItem> items) {
 		this.items = items;
+	}
+
+	public List<HSlice> getSlices() {
+		return slices;
+	}
+
+	public void setSlices(List<HSlice> slices) {
+		this.slices = slices;
 	}
 
 	public OrderStatus getStatus() {

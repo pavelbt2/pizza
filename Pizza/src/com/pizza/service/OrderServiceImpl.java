@@ -26,6 +26,7 @@ import com.pizza.error.PizzaError;
 import com.pizza.error.UnauthorizedUserError;
 import com.pizza.model.HOrder;
 import com.pizza.model.HOrderedItem;
+import com.pizza.model.HSlice;
 import com.pizza.model.Item;
 import com.pizza.model.OrderStatus;
 
@@ -58,6 +59,7 @@ public class OrderServiceImpl implements OrderService {
 		if (order != null) {
 			// populate items in hibernate object		
 			Hibernate.initialize(order.getItems());
+			Hibernate.initialize(order.getSlices());
 			completeSparePizzaSlices(order);
 		}
 		return order;
@@ -72,6 +74,7 @@ public class OrderServiceImpl implements OrderService {
 		} else {
 			// populate items in hibernate object
 			Hibernate.initialize(order.getItems());
+			Hibernate.initialize(order.getSlices());
 			completeSparePizzaSlices(order);
 			// TODO compine with findOrder()
 		}
@@ -141,6 +144,7 @@ public class OrderServiceImpl implements OrderService {
 		orderDao.updateOrder(order);
 		// populate items in hibernate object		
 		Hibernate.initialize(order.getItems()); // TODO move this to Dao??
+		Hibernate.initialize(order.getSlices());
 		completeSparePizzaSlices(order);
 		
 		// transaction will be aborted on error to send
@@ -158,36 +162,25 @@ public class OrderServiceImpl implements OrderService {
 	
 	// use with cautious
 	private void completeSparePizzaSlices(HOrder order) {
-		if (order.getItems() == null || order.getItems().isEmpty()) {
+		if (order.getSlices() == null || order.getSlices().isEmpty()) {
 			// nothing to do
 			return;
 		}
 		
-		// count slices. Don't use streams cause ordered by item id
-		int nSliceItems = 0;
-		int nSlices = 0;		
-		for (HOrderedItem oItem : order.getItems()) {
-			if (!Item.PIZZA_SLICE.equals(oItem.getItem())) { 
-				break; // can stop cause ordered by item id and pizza slice is first
-			}
-			nSliceItems ++;
-			nSlices += oItem.getCount();
-		}
-				
-		// Add slices as needed
+		int nSlices = order.getSlices().stream().mapToInt(s -> s.getCount()).sum();						
 		if ((nSlices % 8) == 0) {
 			return; // no need to add slices
 		}
 		int nDummySlices = 8 - (nSlices % 8);
-		String details = order.getItems().get(nSliceItems-1).getDetails();
+		String details = order.getSlices().get(order.getSlices().size()-1).getDetails();
 		
-		HOrderedItem spareSlices = new HOrderedItem();
-		spareSlices.setItem(Item.PIZZA_SLICE);
+		HSlice spareSlices = new HSlice();
+		spareSlices.setItem(Item.PIZZA_SLICE); // TODO needed?
 		spareSlices.setDetails(details);
 		spareSlices.setCount(nDummySlices);
-		spareSlices.setUser("sparessssss");
+		spareSlices.setUser("spares!!!");
 		
-		order.getItems().add(nSliceItems, spareSlices);
+		order.getSlices().add(spareSlices);
 	}
 	
 	// TODO do it only on commit hook - before commit.
